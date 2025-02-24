@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Accordion,
   AccordionHeader,
@@ -16,9 +16,7 @@ function Icon({ id, open }) {
       viewBox="0 0 24 24"
       strokeWidth={2}
       stroke="currentColor"
-      className={`${
-        id === open ? "rotate-180" : ""
-      } h-5 w-5 transition-transform`}
+      className={`${id === open ? "rotate-180" : ""} h-5 w-5 transition-transform`}
     >
       <path
         strokeLinecap="round"
@@ -31,8 +29,15 @@ function Icon({ id, open }) {
 
 function Faq() {
   const [open, setOpen] = React.useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [question, setQuestion] = useState("");
 
   const handleOpen = (value) => setOpen(open === value ? null : value);
+  const handleSubmit = () => {
+    console.log("User Question:", question);
+    setQuestion("");
+    setShowForm(false);
+  };
 
   const theme = {
     accordion: {
@@ -105,15 +110,40 @@ function Faq() {
 
   return (
     <div className="text-white px-20 xl-max:px-10 sm-max:px-3 pb-16 ">
-      <div className="pt-24">
-        <h1 className="font-semibold text-4xl xl-max:text-3xl sm-max:text-2xl">
-          Frequently Asked Questions
-        </h1>
-        <p className="mt-5 text-lg xl-max:text-base sm-max:text-sm text-gray1">
-          Got questions? We've got answers! Check out our FAQ section to find
-          answers to the most common questions about StreamVibe.
-        </p>
+      <div className="pt-24 flex justify-between items-center">
+        <div>
+          <h1 className="font-semibold text-4xl xl-max:text-3xl sm-max:text-2xl">
+            Frequently Asked Questions
+          </h1>
+          <p className="mt-5 text-lg xl-max:text-base sm-max:text-sm text-gray1">
+            Got questions? We&apos;ve got answers! Check out our FAQ section to find
+            answers to the most common questions about StreamVibe.
+          </p>
+        </div>
+        <button
+          className="bg-red1 text-white px-4 py-2 rounded-lg hover:bg-red-900"
+          onClick={() => setShowForm(!showForm)}
+        >
+          Ask a Question
+        </button>
       </div>
+
+      {showForm && (
+        <div className="mt-4 p-4 bg-black2 rounded-lg flex items-center gap-4">
+          <textarea
+            className="w-full p-2 bg-black3 text-white border border-black4 rounded-lg"
+            placeholder="Type your question here..."
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+          ></textarea>
+          <button
+            className="mt-2 bg-red1 text-white px-4 py-2 rounded-lg hover:bg-red-900"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      )}
 
       <div className="mt-8 grid grid-cols-2 gap-6 md-max:grid-cols-1 md-max:grid-rows-1">
         {faq.map((item, index) => {
@@ -135,7 +165,7 @@ function Faq() {
                       </div>
                       {/* Heading */}
                       <div>
-                      {item.heading}
+                        {item.heading}
                       </div>
                     </div>
                   </AccordionHeader>
@@ -146,9 +176,9 @@ function Faq() {
                     {item.paragraph}
                   </AccordionBody>
                 </Accordion>
-              <hr className="w-[86%] mx-2 hr-gradiant" />                
+                <hr className="w-[86%] mx-2 hr-gradient" />
               </div>
-             
+
             </ThemeProvider>
           );
         })}

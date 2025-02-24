@@ -7,15 +7,22 @@ html, body {
     @apply bg-custom-bg;
   }
 
-.device-gradiant{
-    background: rgb(0,212,255);
-    background: linear-gradient(45deg, rgba(0,212,255,0) 0%, rgba(2,0,36,0.4009978991596639) 87%, rgba(255,0,0,0.5214460784313726) 100%);
+.device-gradient{
+  /* background: rgb(0,212,255); */
+  background: linear-gradient(30deg, rgba(15, 15, 15, 1) 60%, rgba(69, 0, 0, 0.315));
+  /* background: radial-gradient(circle at top right, rgba(15, 15, 15, 1) 60%, rgba(69, 0, 0, 0.315)); */
 }
 
-.hr-gradiant{
+/* .device-gradient:hover {
+    background: linear-gradient(135deg, rgba(20, 20, 20, 1), rgba(100, 0, 0, 0.9));
+    transform: translate(-2px, -2px);
+  } */
+  
+
+.hr-gradient{
     border: none;
     height: 1px; /* Adjust height as needed */
-    background-image: linear-gradient(90deg, red, transparent);
+    background-image: linear-gradient(90deg, transparent, red, transparent);
 
 }
 

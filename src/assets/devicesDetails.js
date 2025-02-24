@@ -1,40 +1,34 @@
-import SmartPhones from './Smartphone.png'
-import Tablet from './Tablet.png'
-import SmartTv from './Smart-tv.png'
-import Laptops from './Laptop.png'
-import GamingConsoles from './Gaming-consoles.png'
-import VrHeadsets from './Vr-headset.png'
+import { FaMobileAlt, FaTabletAlt, FaTv, FaLaptop, FaGamepad, FaVrCardboard } from "react-icons/fa";
 
-export const devicesDetails  = [
+export const devicesDetails = [
     {
-        logo : SmartPhones,
-        device : "Smartphones",
-        details: "StreamVibe is optimized for both Android and iOS smartphones. Download our app from the Google Play Store or the Apple App Store"
+        icon: FaMobileAlt,
+        device: "Smartphones",
+        details: "StreamVibe is optimized for both Android and iOS smartphones. Download our app from the Google Play Store or the Apple App Store."
     },
     {
-        logo : Tablet,
-        device : "Tablet",
-        details: "StreamVibe is optimized for both Android and iOS smartphones. Download our app from the Google Play Store or the Apple App Store"
+        icon: FaTabletAlt,
+        device: "Tablet",
+        details: "StreamVibe is optimized for both Android and iOS tablets. Download our app from the Google Play Store or the Apple App Store."
     },
     {
-        logo : SmartTv,
-        device : "Smart TV",
-        details: "StreamVibe is optimized for both Android and iOS smartphones. Download our app from the Google Play Store or the Apple App Store"
+        icon: FaTv,
+        device: "Smart TV",
+        details: "StreamVibe is optimized for Smart TVs. Download our app from the Google Play Store or the Apple App Store."
     },
     {
-        logo : Laptops,
-        device : "Laptops",
-        details: "StreamVibe is optimized for both Android and iOS smartphones. Download our app from the Google Play Store or the Apple App Store"
+        icon: FaLaptop,
+        device: "Laptops",
+        details: "StreamVibe works on Windows and macOS laptops. Download our app from the Google Play Store or the Apple App Store."
     },
     {
-        logo : GamingConsoles,
-        device : "Gaming Consoles",
-        details: "StreamVibe is optimized for both Android and iOS smartphones. Download our app from the Google Play Store or the Apple App Store"
+        icon: FaGamepad,
+        device: "Gaming Consoles",
+        details: "Enjoy StreamVibe on your gaming console. Download our app from the Google Play Store or the Apple App Store."
     },
     {
-        logo : VrHeadsets,
-        device : "VR Headsets",
-        details: "StreamVibe is optimized for both Android and iOS smartphones. Download our app from the Google Play Store or the Apple App Store"
+        icon: FaVrCardboard,
+        device: "VR Headsets",
+        details: "Experience immersive VR streaming with StreamVibe. Download our app from the Google Play Store or the Apple App Store."
     },
-
-]
+];

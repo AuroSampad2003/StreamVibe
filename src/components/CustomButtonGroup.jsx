@@ -13,7 +13,7 @@ function CustomButtonGroup({ next, previous }) {
 
       {/* Progress Indicator */}
       <div className="hidden sm:flex items-center gap-[2px]">
-        <div className="w-4 h-[3px] bg-red-500 rounded-md"></div>
+        <div className="w-4 h-[3px] bg-red1 rounded-md"></div>
         <div className="w-3 h-[2px] bg-gray-600 rounded-md"></div>
         <div className="w-3 h-[2px] bg-gray-600 rounded-md"></div>
         <div className="w-3 h-[2px] bg-gray-600 rounded-md"></div>

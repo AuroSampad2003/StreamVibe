@@ -40,3 +40,26 @@ export const faq = [
         paragraph: 'StreamVibe is a streaming service that allows you to watch movies and shows on demand.'
     },
 ]
+
+// Assuming this is part of your main JS file handling the FAQ section
+
+document.addEventListener("DOMContentLoaded", () => {
+    const askButton = document.getElementById("askQuestionBtn");
+    const questionForm = document.getElementById("questionForm");
+    const submitQuestion = document.getElementById("submitQuestion");
+    const questionInput = document.getElementById("questionInput");
+
+    askButton.addEventListener("click", () => {
+        questionForm.style.display = questionForm.style.display === "none" ? "block" : "none";
+    });
+
+    submitQuestion.addEventListener("click", () => {
+        const question = questionInput.value.trim();
+        if (question) {
+            console.log("User Question:", question);
+            questionInput.value = ""; // Clear input after submission
+        } else {
+            alert("Please enter a question before submitting.");
+        }
+    });
+});
