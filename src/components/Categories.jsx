@@ -38,23 +38,24 @@ function Categories() {
   };
 
   return (
-    <div className="text-white px-20 xl-max:px-10 sm-max:px-3">
+    <div className="text-white px-20 xl-max:px-10 sm-max:px-3 pb-16 mt-16">
       {/* Heading & Controls */}
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="font-semibold text-4xl xl-max:text-3xl sm-max:text-2xl">
+      <h1 className="font-semibold text-4xl xl-max:text-3xl sm-max:text-2xl">
             Explore our wide variety of categories
           </h1>
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          
           <p className="mt-5 text-lg xl-max:text-base sm-max:text-sm text-gray1">
             Whether you&apos;re looking for a comedy to make you laugh, a drama to make you think, or a documentary to learn something new.
           </p>
         </div>
 
         {/* Custom Navigation Buttons (Only for Large Screens) */}
-        <div className="hidden md:flex items-center gap-3 bg-black4 px-4 py-2 rounded-lg shadow-md">
+        <div className="hidden md:flex items-center gap-3 bg-black1 px-4 py-2 rounded-lg border border-gray-900 shadow-md">
           <button
             onClick={handlePrev}
-            className="bg-black5 p-3 rounded-md hover:bg-gray-800 transition-all"
+            className="bg-black3 p-3 rounded-md border border-gray-900 hover:bg-gray-900 transition-all"
           >
             <ChevronLeft className="text-white w-5 h-5" />
           </button>
@@ -72,7 +73,7 @@ function Categories() {
 
           <button
             onClick={handleNext}
-            className="bg-black5 p-3 rounded-md hover:bg-gray-800 transition-all"
+            className="bg-black3 p-3 rounded-md border border-gray-900 hover:bg-gray-900 transition-all"
           >
             <ChevronRight className="text-white w-5 h-5" />
           </button>
@@ -99,7 +100,7 @@ function Categories() {
             return (
               <div
                 key={index}
-                className="bg-black3 px-5 py-6 rounded-xl mx-3 hover:scale-105 hover:shadow-lg transition-transform duration-300 ease-in-out w-[250px] text-center"
+                className="bg-black3 px-5 py-6 rounded-xl mx-3 border border-gray-900 hover:scale-105 hover:shadow-lg transition-transform duration-300 ease-in-out w-[250px] text-center"
                 onClick={() =>
                   navigate("/categoriesList", { state: { genreName: genre.name } })
                 }

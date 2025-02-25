@@ -1,4 +1,4 @@
-import React from 'react'
+import 'react'
 import Upcoming from '../components/Upcoming'
 import Popular from '../components/Popular'
 import TopRated from '../components/TopRated'

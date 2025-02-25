@@ -6,6 +6,7 @@ import NavigationBar from "./components/NavigationBar";
 import LoadingBar from "react-top-loading-bar";
 import { useState } from "react";
 import Footer from "./components/Footer";
+import FreeTrial from "./components/FreeTrial";
 import CategoriesList from "./pages/CategoriesList";
 import CategoriesState from "./context/CategoriesState";
 import MovieDetails from "./pages/MovieDetails";
@@ -76,6 +77,7 @@ function App() {
         <Route path="/movies" element={<Movies />} />
         <Route path="/support" element={<Support />} />
       </Routes>
+      <FreeTrial />
       <Footer />
     </CategoriesState>
     </ThemeProvider>

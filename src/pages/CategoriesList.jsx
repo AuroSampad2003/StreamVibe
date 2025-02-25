@@ -63,7 +63,8 @@ function CategoriesList() {
           <div key={index} className="p-4">
             <h2 className="inline font-bold text-xl md-max:text-lg mb-2 relative bottom-8 left-3 rounded-lg px-3 py-2 bg-red1">{genre.name}</h2>
             <div className="grid grid-cols-5 xl-max:grid-cols-4 md-max:grid-cols-2 sm-max:grid-cols-1 gap-7">
-              {paginatedMovies.map((movie, index2) => (
+              {paginatedMovies.map((movie) => (
+                // eslint-disable-next-line react/jsx-key
                 <Link to={`/${movie.id}`}  className=" bg-black3 border border-black5 p-3 rounded-xl shadow-lg hover:shadow-white/10  duration-300">
                 <div className="">
                   <img

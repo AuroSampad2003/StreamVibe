@@ -109,24 +109,25 @@ function Faq() {
   };
 
   return (
-    <div className="text-white px-20 xl-max:px-10 sm-max:px-3 pb-16 ">
-      <div className="pt-24 flex justify-between items-center">
-        <div>
-          <h1 className="font-semibold text-4xl xl-max:text-3xl sm-max:text-2xl">
-            Frequently Asked Questions
-          </h1>
-          <p className="mt-5 text-lg xl-max:text-base sm-max:text-sm text-gray1">
+    <div className="text-white px-20 xl-max:px-10 sm-max:px-3 pb-16 mt-16">
+      <h1 className="font-semibold text-4xl xl-max:text-3xl sm-max:text-2xl mb-4">
+        Frequently Asked Questions
+      </h1>
+      <div className="flex flex-wrap gap-4 justify-between items-start mb-10">
+        <div className="flex-1 min-w-[250px]">
+          <p className="text-lg xl-max:text-base sm-max:text-sm text-gray-400">
             Got questions? We&apos;ve got answers! Check out our FAQ section to find
             answers to the most common questions about StreamVibe.
           </p>
         </div>
         <button
-          className="bg-red1 text-white px-4 py-2 rounded-lg hover:bg-red-900"
+          className="bg-red1 text-white px-4 py-2 rounded-lg hover:bg-red-900 self-start md:self-center"
           onClick={() => setShowForm(!showForm)}
         >
           Ask a Question
         </button>
       </div>
+
 
       {showForm && (
         <div className="mt-4 p-4 bg-black2 rounded-lg flex items-center gap-4">

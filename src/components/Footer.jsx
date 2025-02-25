@@ -99,5 +99,3 @@ function Footer() {
 }
 
 export default Footer
-
-// work hear
