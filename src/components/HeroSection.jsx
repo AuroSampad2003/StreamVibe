@@ -79,12 +79,7 @@ function HeroSection() {
           The Best Streaming Experience
         </h1>
         <p className="px-32 xl-max:px-16 md-max:px-6 mt-3 text-lg xl-max:text-base md-max:text-sm text-gray1">
-          StreamVibe is the best streaming experience for watching your favorite
-          movies and shows on demand, anytime, anywhere. With StreamVibe, you
-          can enjoy a wide variety of content, including the latest
-          blockbusters, classic movies, popular TV shows, and more. You can also
-          create your own watchlists, so you can easily find the content you
-          want to watch.
+          StreamVibe is the best streaming experience for watching your favorite movies and shows on demand, anytime, anywhere. With StreamVibe, you can enjoy a wide variety of content, including the latest blockbusters, classic movies, popular TV shows, and more. You can also create your own watchlists, so you can easily find the content you want to watch.
         </p>
 
         {/* Updated Button with Play Icon */}

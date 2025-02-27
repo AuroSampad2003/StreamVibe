@@ -1,4 +1,4 @@
-import React from 'react'
+import 'react'
 import ContactForm from '../components/ContactForm'
 import Faq from '../components/Faq'
 

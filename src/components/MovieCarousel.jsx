@@ -1,83 +1,62 @@
 /* eslint-disable react/prop-types */
-import { useRef, useState, useEffect } from "react";
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
+import { useState, useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const MovieCarousel = ({ movies }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const totalSlides = movies.length;
   const carouselRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  // Update state on window resize
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
+  };
 
-  // Handle touch gestures
-  useEffect(() => {
-    if (!isMobile) return;
-
-    let startX = 0;
-
-    const handleTouchStart = (e) => {
-      startX = e.touches[0].clientX;
-    };
-
-    const handleTouchMove = (e) => {
-      const diffX = e.touches[0].clientX - startX;
-      if (diffX > 50) {
-        // Swipe Right → Previous
-        carouselRef.current.previous();
-      } else if (diffX < -50) {
-        // Swipe Left → Next
-        carouselRef.current.next();
-      }
-    };
-
-    const carousel = document.querySelector(".react-multi-carousel-track");
-    carousel.addEventListener("touchstart", handleTouchStart);
-    carousel.addEventListener("touchmove", handleTouchMove);
-
-    return () => {
-      carousel.removeEventListener("touchstart", handleTouchStart);
-      carousel.removeEventListener("touchmove", handleTouchMove);
-    };
-  }, [isMobile]);
-
-  const responsive = {
-    desktop: { breakpoint: { max: 3000, min: 1024 }, items: 5 },
-    tablet: { breakpoint: { max: 1024, min: 768 }, items: 3 },
-    mobile: { breakpoint: { max: 768, min: 0 }, items: 2 },
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
   };
 
   return (
-    <div className="relative">
-      <Carousel
+    <div className="relative w-full max-w-4xl mx-auto overflow-hidden">
+      {/* Movie Slider */}
+      <div
         ref={carouselRef}
-        responsive={responsive}
-        infinite={true}
-        swipeable={true}
-        draggable={true}
-        arrows={!isMobile} // ✅ Arrows only for large screens
-        className="mt-6 py-4"
+        className="flex transition-transform duration-300"
+        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {movies.map((movie, index) => (
-          <div key={index} className="p-2">
-            <img src={movie.image} alt={movie.title} className="rounded-lg" />
+          <div key={index} className="w-full flex-shrink-0 p-2">
+            <img src={movie.image} alt={movie.title} className="rounded-lg w-full" />
           </div>
         ))}
-      </Carousel>
+      </div>
 
-      {/* ✅ Custom Next Button for Small Screens */}
-      {isMobile && (
+      {/* Custom Navigation Buttons */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-3 bg-black px-4 py-2 rounded-lg border border-gray-900 shadow-md">
         <button
-          className="absolute right-4 bottom-4 bg-white p-2 rounded-full shadow-lg"
-          onClick={() => carouselRef.current.next()}
+          onClick={handlePrev}
+          className="bg-gray-800 p-3 rounded-md border border-gray-700 hover:bg-gray-900 transition-all"
         >
-          ➡️
+          <ChevronLeft className="text-white w-5 h-5" />
         </button>
-      )}
+
+        <div className="flex items-center gap-[3px]">
+          {movies.map((_, index) => (
+            <div
+              key={index}
+              className={`w-3 h-[2px] rounded-md ${
+                index === currentIndex ? "bg-red-500 w-4" : "bg-gray-600"
+              }`}
+            ></div>
+          ))}
+        </div>
+
+        <button
+          onClick={handleNext}
+          className="bg-gray-800 p-3 rounded-md border border-gray-700 hover:bg-gray-900 transition-all"
+        >
+          <ChevronRight className="text-white w-5 h-5" />
+        </button>
+      </div>
     </div>
   );
 };

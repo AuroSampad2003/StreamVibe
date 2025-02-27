@@ -1,6 +1,6 @@
 import Home from "./pages/Home";
 import { Route, Routes } from "react-router-dom";
-import Movies from "./pages/Movies";
+import Movies_Shows from "./pages/Movies_Shows";
 import Support from "./pages/Support";
 import NavigationBar from "./components/NavigationBar";
 import LoadingBar from "react-top-loading-bar";
@@ -74,7 +74,7 @@ function App() {
         <Route path="/categoriesList" element={<CategoriesList />} />
         <Route path="/searchlist" element={<SearchList />} />
         <Route path=":id" element={<MovieDetails />} />
-        <Route path="/movies" element={<Movies />} />
+        <Route path="/movies" element={<Movies_Shows />} />
         <Route path="/support" element={<Support />} />
       </Routes>
       <FreeTrial />
