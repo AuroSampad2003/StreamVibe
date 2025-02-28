@@ -10,15 +10,15 @@ function Movies() {
     <div className='text-white'>
     <HeroBanner />
       {/* Toggle Buttons - Only for Small Screens */}
-      <div className='md:hidden flex bg-black1 p-1 rounded-lg border border-gray-900 w-fit mx-auto mb-4'>
+      <div className='md:hidden flex justify-center items-center bg-black1 p-1 rounded-lg border border-gray-900 w-fit mx-auto mb-2'>
         <button
-          className={`px-6 py-2 rounded-lg transition-all ${showMovies ? "bg-black4 text-white" : "text-gray-500"}`}
+          className={`px-12 py-2 rounded-lg transition-all ${showMovies ? "bg-black4 text-white" : "text-gray-500"}`}
           onClick={() => setShowMovies(true)}
         >
           Movies
         </button>
         <button
-          className={`px-6 py-2 rounded-lg transition-all ${!showMovies ? "bg-black4 text-white" : "text-gray-500"}`}
+          className={`px-12 py-2 rounded-lg transition-all ${!showMovies ? "bg-black4 text-white" : "text-gray-500"}`}
           onClick={() => setShowMovies(false)}
         >
           Shows

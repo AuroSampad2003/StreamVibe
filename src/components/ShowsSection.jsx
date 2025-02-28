@@ -1,5 +1,5 @@
 import "react";
-import Genres from "./MGenres";
+import Genres from "./SGenres";
 import NewReleases from "./MNewReleases";
 import TopRated from "./MTopRated";
 import TrendingNow from "./MTrendingNow";

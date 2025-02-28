@@ -1,97 +1,95 @@
-import { useEffect, useState, useCallback } from "react";
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
 import CategoriesContext from "./CategoriesContext";
 
-// Custom hook for fetching movie data
-const useMoviesByGenre = (genresId) => {
-  const [genresDetails, setGenresDetails] = useState([]);
+const API_KEY = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3ZWZiZTAyYjM1YTU4ZTc1MmU0YTYyNjJhOWZkMmFkYyIsIm5iZiI6MTc0MDc1MTQ5My4zNTgsInN1YiI6IjY3YzFjMjg1OWFkY2QyNTYyNTM1YzIyZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OvJ5K7QpCiaubjID0pJj146d-S05U_0E6JD0pxV_D_o";
+const options = {
+  method: "GET",
+  headers: {
+    accept: "application/json",
+    Authorization: API_KEY,
+  },
+};
+
+const useFetchByGenre = (genresId, type) => {
+  const [details, setDetails] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState(null);
 
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwYzFjYzVlMWNkZTgzM2RmNzYzMDhlYjA5YjA1MjMyYyIsIm5iZiI6MTczMjI5MzMwOS42MzYzNjM3LCJzdWIiOiI2NzE5M2M2NTVkMGRlODkwNDJkOGNjYzEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.D8PuTAUcytmByfmtlnRTVnAjjMRnQm-FLgvFxF5dtYs",
-    },
-  };
-
-  // Fetch movies by genre when genresId changes
   useEffect(() => {
     if (!genresId) return;
 
-    const fetchAllPages = async () => {
+    const fetchData = async () => {
       setIsFetching(true);
-      setError(null); // Reset error state on new fetch
-      const allMovies = [];
+      setError(null);
+      const allItems = [];
+      const endpoint = type === "movie" ? "discover/movie" : "discover/tv";
 
       try {
         for (let page = 1; page <= 15; page++) {
           const response = await fetch(
-            `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${genresId}`,
+            `https://api.themoviedb.org/3/${endpoint}?include_adult=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${genresId}`,
             options
           );
           const data = await response.json();
-          allMovies.push(...data.results);
+          if (data.results) {
+            allItems.push(...data.results);
+          }
         }
-        setGenresDetails(allMovies);
+        setDetails(allItems);
       } catch (error) {
-        setError("Error fetching movies. Please try again later.");
-        console.error("Error fetching movies:", error);
+        setError(`Error fetching ${type}. Please try again later.`);
+        console.error(`Error fetching ${type}:`, error);
       } finally {
         setIsFetching(false);
       }
     };
 
-    fetchAllPages();
-  }, [genresId]);
+    fetchData();
+  }, [genresId, type]);
 
-  return { genresDetails, isFetching, error };
+  return { details, isFetching, error };
 };
 
 const CategoriesState = (props) => {
   const [genresList, setGenresList] = useState([]);
-  const [genresId, setGenresId] = useState("28"); // Default genre ID (Action in TMDB)
+  const [genresId, setGenresId] = useState("28"); // Default: Action (Movies)
+  const [categoryType, setCategoryType] = useState("movie"); // "movie" or "tv"
   const [isFetchingGenres, setIsFetchingGenres] = useState(true);
 
-  const { genresDetails, isFetching, error } = useMoviesByGenre(genresId);
+  const { details: genresDetails, isFetching, error } = useFetchByGenre(genresId, categoryType);
 
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwYzFjYzVlMWNkZTgzM2RmNzYzMDhlYjA5YjA1MjMyYyIsIm5iZiI6MTczMjI5MzMwOS42MzYzNjM3LCJzdWIiOiI2NzE5M2M2NTVkMGRlODkwNDJkOGNjYzEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.D8PuTAUcytmByfmtlnRTVnAjjMRnQm-FLgvFxF5dtYs",
-    },
-  };
-
-  // Fetch genres list on component mount
   useEffect(() => {
     const fetchGenresList = async () => {
       try {
-        const response = await fetch("https://api.themoviedb.org/3/genre/movie/list?language=en", options);
+        const response = await fetch(
+          `https://api.themoviedb.org/3/genre/${categoryType}/list?language=en`,
+          options
+        );
         const data = await response.json();
-        setGenresList(data.genres);
+        setGenresList(data.genres || []); // Ensure genresList is never undefined
       } catch (error) {
-        console.error("Error fetching genres:", error);
+        console.error(`Error fetching ${categoryType} genres:`, error);
       } finally {
         setIsFetchingGenres(false);
       }
     };
 
     fetchGenresList();
-  }, []);
-
+  }, [categoryType]);
+  
   return (
     <CategoriesContext.Provider
       value={{
-        genresList,
+        genresList: genresList || [], // Ensure it always has a default value
         genresDetails,
         genresId,
-        setGenresId, // Adding setGenresId to allow changing the genre
+        setGenresId,
+        categoryType,
+        setCategoryType,
         isFetchingGenres,
         isFetching,
-        error, // Adding error so components can show messages
+        error,
       }}
     >
       {props.children}
