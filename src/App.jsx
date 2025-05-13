@@ -8,12 +8,13 @@ import { useState } from "react";
 import Footer from "./components/Footer";
 import FreeTrial from "./components/FreeTrial";
 import CategoriesList from "./pages/CategoriesList";
+import TopGenreList from "./pages/TopGenreList";
+import Subscriptions from "./pages/Subscriptions";
 import CategoriesState from "./context/CategoriesState";
 import MovieDetails from "./pages/MovieDetails";
 import SearchList from "./pages/SearchList";
 import 'font-awesome/css/font-awesome.min.css';
 import { ThemeProvider } from "@material-tailwind/react";
-
 
 function App() {
   const [progress, setProgress] = useState(0);
@@ -59,27 +60,32 @@ function App() {
       },
     },
   };
+
   return (
     <ThemeProvider value={theme}>
-    <CategoriesState>
-      <LoadingBar
-        height={3}
-        color="rgb(229, 0, 0)"
-        progress={progress}
-        onLoaderFinished={() => setProgress(0)}
-      />
-      <NavigationBar />
-      <Routes>
-        <Route path="/" element={<Home setProgress={setProgress} />} />
-        <Route path="/categoriesList" element={<CategoriesList />} />
-        <Route path="/searchlist" element={<SearchList />} />
-        <Route path=":id" element={<MovieDetails />} />
-        <Route path="/movies" element={<Movies_Shows />} />
-        <Route path="/support" element={<Support />} />
-      </Routes>
-      <FreeTrial />
-      <Footer />
-    </CategoriesState>
+      <CategoriesState>
+        <LoadingBar
+          height={3}
+          color="rgb(229, 0, 0)"
+          progress={progress}
+          onLoaderFinished={() => setProgress(0)}
+        />
+        <NavigationBar />
+        <Routes>
+          <Route path="/" element={<Home setProgress={setProgress} />} />
+          <Route path="/categoriesList" element={<CategoriesList />} />
+          <Route path="/topGenreList" element={<TopGenreList />} />
+          <Route path="/searchlist" element={<SearchList />} />
+          <Route path="/:categoryType/:id" element={<MovieDetails />} />
+          <Route path=":id" element={<MovieDetails />} />
+          <Route path="/movies" element={<Movies_Shows />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="/subscriptions" element={<Subscriptions />} />
+          <Route path="*" element={<div className="text-center text-white mt-10 text-2xl">404 | Page Not Found</div>} />
+        </Routes>
+        <FreeTrial />
+        <Footer />
+      </CategoriesState>
     </ThemeProvider>
   );
 }

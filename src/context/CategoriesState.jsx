@@ -1,8 +1,8 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import CategoriesContext from "./CategoriesContext";
 
 const API_KEY = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3ZWZiZTAyYjM1YTU4ZTc1MmU0YTYyNjJhOWZkMmFkYyIsIm5iZiI6MTc0MDc1MTQ5My4zNTgsInN1YiI6IjY3YzFjMjg1OWFkY2QyNTYyNTM1YzIyZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OvJ5K7QpCiaubjID0pJj146d-S05U_0E6JD0pxV_D_o";
+
 const options = {
   method: "GET",
   headers: {
@@ -11,13 +11,13 @@ const options = {
   },
 };
 
-const useFetchByGenre = (genresId, type) => {
+const useFetchByGenre = (genreId, type) => {
   const [details, setDetails] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!genresId) return;
+    if (!genreId || !type) return;
 
     const fetchData = async () => {
       setIsFetching(true);
@@ -26,62 +26,78 @@ const useFetchByGenre = (genresId, type) => {
       const endpoint = type === "movie" ? "discover/movie" : "discover/tv";
 
       try {
-        for (let page = 1; page <= 15; page++) {
-          const response = await fetch(
-            `https://api.themoviedb.org/3/${endpoint}?include_adult=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${genresId}`,
+        for (let page = 1; page <= 5; page++) {
+          const res = await fetch(
+            `https://api.themoviedb.org/3/${endpoint}?include_adult=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${genreId}`,
             options
           );
-          const data = await response.json();
-          if (data.results) {
+          if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+
+          const data = await res.json();
+          if (data.results?.length) {
             allItems.push(...data.results);
           }
         }
         setDetails(allItems);
-      } catch (error) {
-        setError(`Error fetching ${type}. Please try again later.`);
-        console.error(`Error fetching ${type}:`, error);
+      } catch (err) {
+        console.error("Fetch by genre failed:", err);
+        setError(`Failed to fetch ${type} content. ${err.message || ""}`);
       } finally {
         setIsFetching(false);
       }
     };
 
     fetchData();
-  }, [genresId, type]);
+  }, [genreId, type]);
 
   return { details, isFetching, error };
 };
 
-const CategoriesState = (props) => {
+// eslint-disable-next-line react/prop-types
+const CategoriesState = ({ children, initialType = "movie" }) => {
+  const [categoryType, setCategoryType] = useState(initialType);
   const [genresList, setGenresList] = useState([]);
-  const [genresId, setGenresId] = useState("28"); // Default: Action (Movies)
-  const [categoryType, setCategoryType] = useState("movie"); // "movie" or "tv"
-  const [isFetchingGenres, setIsFetchingGenres] = useState(true);
+  const [genresId, setGenresId] = useState(null);
+  const [isFetchingGenres, setIsFetchingGenres] = useState(false);
+  const [genresError, setGenresError] = useState(null);
 
   const { details: genresDetails, isFetching, error } = useFetchByGenre(genresId, categoryType);
 
   useEffect(() => {
     const fetchGenresList = async () => {
+      setIsFetchingGenres(true);
+      setGenresError(null);
+
       try {
-        const response = await fetch(
+        const res = await fetch(
           `https://api.themoviedb.org/3/genre/${categoryType}/list?language=en`,
           options
         );
-        const data = await response.json();
-        setGenresList(data.genres || []); // Ensure genresList is never undefined
-      } catch (error) {
-        console.error(`Error fetching ${categoryType} genres:`, error);
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+
+        const data = await res.json();
+        const genres = data.genres || [];
+
+        setGenresList(genres);
+
+        // Only auto-select the first genre if none is selected
+        setGenresId((prevId) => prevId || genres[0]?.id || null);
+      } catch (err) {
+        console.error(`Failed to fetch genres for ${categoryType}:`, err);
+        setGenresError(`Failed to fetch genres for ${categoryType}. ${err.message || ""}`);
       } finally {
         setIsFetchingGenres(false);
       }
     };
 
+    // Fetch genres only when categoryType changes
     fetchGenresList();
-  }, [categoryType]);
-  
+  }, [categoryType]);  // This ensures it runs on both `movie` and `tv`
+
   return (
     <CategoriesContext.Provider
       value={{
-        genresList: genresList || [], // Ensure it always has a default value
+        genresList,
         genresDetails,
         genresId,
         setGenresId,
@@ -90,11 +106,13 @@ const CategoriesState = (props) => {
         isFetchingGenres,
         isFetching,
         error,
+        genresError,
       }}
     >
-      {props.children}
+      {children}
     </CategoriesContext.Provider>
   );
 };
 
 export default CategoriesState;
+

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -9,6 +9,7 @@ function NewReleases() {
   const [isFetching, setIsFetching] = useState(true);
   const carouselRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate(); // Get the navigate function
 
   const responsive = {
     superLargeDesktop: { breakpoint: { max: 4000, min: 3000 }, items: 5, slidesToSlide: 5 },
@@ -27,7 +28,7 @@ function NewReleases() {
 
   useEffect(() => {
     if (isFetching) {
-      fetch('https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1', options)
+      fetch('https://api.themoviedb.org/3/tv/airing_today?language=en-US&page=1', options)
         .then(res => res.json())
         .then(res => {
           setData(res.results);
@@ -51,30 +52,44 @@ function NewReleases() {
     }
   };
 
+  // Handle navigation on click
+  const handleShowClick = (id) => {
+    navigate(`/tv/${id}`);
+  };
+
   return (
     <div className="text-white px-20 xl:px-10 md:px-6 sm-max:px-0.5 mt-16 mb-16">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="font-bold text-2xl lg:text-2xl sm:text-xl">New Releases</h2>
-        
+        <h2 className="font-bold text-2xl lg:text-2xl sm:text-xl">New Releases Shows</h2>
+
         {/* Custom Navigation Buttons (Only for Large Screens) */}
-        <div className="hidden md:flex items-center gap-3 bg-black1 px-1.5 py-1.5 rounded-lg border border-gray-900 shadow-md">
-          <button onClick={handlePrev} className="bg-black3 p-2.5 rounded-md border border-gray-900 hover:bg-gray-900 transition-all">
+        <div className="hidden md:flex items-center gap-3 bg-[#0F0F0F] px-1.5 py-1.5 rounded-lg border border-[#1F1F1F] shadow-md">
+          <button
+            onClick={handlePrev}
+            className="bg-[#1A1A1A] p-2.5 rounded-md border border-[#1F1F1F] hover:bg-[#1F1F1F] transition-all"
+          >
             <ChevronLeft className="text-white w-5 h-5" />
           </button>
+
           <div className="flex items-center gap-[3px]">
             {[0, 1, 2, 3].map((index) => (
               <div
                 key={index}
-                className={`w-3 h-[2.5px] rounded-md ${index === currentIndex % 4 ? "bg-red1 w-4" : "bg-gray-600"}`}
+                className={`w-3 h-[2.5px] rounded-md ${index === currentIndex % 4 ? "bg-[#E50000] w-4" : "bg-gray-800"
+                  }`}
               ></div>
             ))}
           </div>
-          <button onClick={handleNext} className="bg-black3 p-2.5 rounded-md border border-gray-900 hover:bg-gray-900 transition-all">
+
+          <button
+            onClick={handleNext}
+            className="bg-[#1A1A1A] p-2.5 rounded-md border border-[#1F1F1F] hover:bg-[#1F1F1F] transition-all"
+          >
             <ChevronRight className="text-white w-5 h-5" />
           </button>
         </div>
       </div>
-      
+
       <Carousel
         ref={carouselRef}
         responsive={responsive}
@@ -86,21 +101,26 @@ function NewReleases() {
         beforeChange={(nextSlide) => setCurrentIndex(nextSlide % data.length)}
       >
         {data.map((item, index) => (
-          <Link to={`/${item.id}`} key={index}>
-            <div className='border border-black5 bg-black3 rounded-2xl mx-2 p-4 hover:scale-105 hover:shadow-lg transition-transform duration-300 ease-in-out'>
-              <img className='w-full rounded-2xl object-cover' src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt="Loading..." />
-              <h1 className='text-center font-bold mt-3 text-sm sm:text-base'>{item.title}</h1>
-              <h1 className='text-center text-sm sm:text-base text-gray1 bg-black2 py-1 w-fit mx-auto px-2 mt-1 border border-black5 rounded-3xl'>Released at {item.release_date}</h1>
-            </div>
-          </Link>
+          <div
+            key={index}
+            className='bg-[#1A1A1A] border border-[#262626] rounded-xl mx-2 p-4 hover:scale-105 hover:shadow-lg transition-transform duration-300 ease-in-out'
+            onClick={() => handleShowClick(item.id)} // Navigate on click
+          >
+            <img 
+              className='w-full h-[270px] rounded-xl object-fill' 
+              src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} 
+              alt="Loading..." />
+            <h1 className='text-center font-bold mt-3 text-sm sm:text-base'>{item.name}</h1>
+            <h1 className='text-center text-sm sm:text-base text-[#BFBFBF] bg-[#141414] py-1 w-fit mx-auto px-2 mt-1 border border-[#262626] rounded-3xl'>Released at {item.first_air_date}</h1>
+          </div>
         ))}
       </Carousel>
-      
+
       {/* Small Screen Pagination Indicator */}
       <div className="md:hidden flex justify-center mt-4">
-        <div className="w-20 h-1 bg-gray-700 rounded-full relative">
+        <div className="w-20 h-1 bg-gray-800 rounded-full relative">
           <div
-            className="h-1 bg-red1 rounded-full"
+            className="h-1 bg-[#E50000] rounded-full"
             style={{ width: data.length > 0 ? `${(currentIndex / data.length) * 100}%` : "0%" }}
           ></div>
         </div>

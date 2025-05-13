@@ -1,7 +1,7 @@
 import "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaPlay } from "react-icons/fa"; // Import Play Icon
+import { FaPlay } from "react-icons/fa";
 import { assets } from "../assets/assets";
 
 function HeroSection() {
@@ -44,50 +44,44 @@ function HeroSection() {
   }, [isFetching]);
 
   return (
-    <div className="bg-black2 relative z-0">
-      <div className="grid grid-cols-8 md-max:grid-cols-5 gap-3 md-max:gap-0 relative bottom-[92px] -z-10 pt-1 bg-black2 gradient">
+    <div className="relative z-0">
+      <div className="grid grid-cols-8 md-max:grid-cols-5 gap-2 md-max:gap-1 relative bottom-[92px] -z-10 pt-1 bg-[#141414] gradient">
         {movieData.map((data, index) => {
           return (
             <div key={index}>
               <img
-                className="rounded-lg md-max:rounded-none"
+                className="rounded-lg md-max:rounded"
                 src={`https://image.tmdb.org/t/p/w500/${data.backdrop_path}`}
                 alt="Movie Poster"
               />
             </div>
           );
         })}
+
+        {/* Gradient Overlay */}
+        <div className="header-gradient" />
         <img
-          className="absolute top-0 w-full md-max:hidden"
-          src={assets.topGradiant}
-          alt="Top Gradient"
-        />
-        <img
-          className="absolute inset-0 mx-auto my-auto top-1/2 transform -translate-y-1/2 w-[250px] xl-max:w-[150px] md-max:w-[50px] md-max:hidden"
+          className="absolute inset-0 mx-auto my-auto top-1/2 transform -translate-y-1/2 
+             w-[100px] sm:w-[100px] md:w-[150px] lg:w-[200px] xl:w-[250px]"
           src={assets.abstract}
           alt="Abstract Shape"
         />
-        <img
-          className="absolute top-[120px] w-full md-max:hidden"
-          src={assets.bottomGradiant}
-          alt="Bottom Gradient"
-        />
       </div>
 
-      <div className="relative bottom-[100px] flex flex-col justify-center items-center text-center bg-black2 text-white pb-[50px] md-max:pb-[0px]">
+      <div className="relative bottom-[100px] flex flex-col justify-center items-center text-center bg-[#141414] text-white pb-[50px] md-max:pb-[0px]">
         <h1 className="relative bottom-5 font-semibold text-5xl xl-max:text-4xl sm-max:text-3xl">
           The Best Streaming Experience
         </h1>
-        <p className="px-32 xl-max:px-16 md-max:px-6 mt-3 text-lg xl-max:text-base md-max:text-sm text-gray1">
+        <p className="px-32 xl-max:px-16 md-max:px-6 mt-3 text-base xl-max:text-sm md-max:text-xs text-[#999999]">
           StreamVibe is the best streaming experience for watching your favorite movies and shows on demand, anytime, anywhere. With StreamVibe, you can enjoy a wide variety of content, including the latest blockbusters, classic movies, popular TV shows, and more. You can also create your own watchlists, so you can easily find the content you want to watch.
         </p>
 
         {/* Updated Button with Play Icon */}
         <button
           onClick={() => navigate('/movies')}
-          className="mt-10 bg-red1 hover:bg-red4 px-4 py-3 xl-max:py-2 sm-max:py-1 sm-max:text-sm flex items-center gap-2 rounded-xl"
+          className="mt-10 bg-[#E50000] hover:bg-red-900 px-4 py-3 text-base xl-max:text-sm md-max:text-sm flex items-center gap-2 rounded-lg"
         >
-          <FaPlay className="text-white sm-max:w-4 sm-max:h-4" /> 
+          <FaPlay className="text-white sm-max:w-4 sm-max:h-4" />
           Start Watching Now
         </button>
       </div>

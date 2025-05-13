@@ -57,8 +57,7 @@ function NavigationBar() {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `py-2 px-3 rounded-lg text-center hover:scale-110 transition-transform duration-300 ease-in-out ${
-              isActive ? "font-semibold bg-black3 text-white" : "text-gray4"
+            `py-2 px-3 rounded-lg text-center hover:scale-110 transition-transform duration-300 ease-in-out ${isActive ? "font-semibold bg-[#1A1A1A] text-white" : "text-[#BFBFBF]"
             }`
           }
         >
@@ -67,8 +66,7 @@ function NavigationBar() {
         <NavLink
           to="/movies"
           className={({ isActive }) =>
-            `py-2 px-3 rounded-lg text-center hover:scale-110 transition-transform duration-300 ease-in-out ${
-              isActive ? "font-semibold bg-black3 text-white" : "text-gray4"
+            `py-2 px-3 rounded-lg text-center hover:scale-110 transition-transform duration-300 ease-in-out ${isActive ? "font-semibold bg-[#1A1A1A] text-white" : "text-[#BFBFBF]"
             }`
           }
         >
@@ -77,8 +75,7 @@ function NavigationBar() {
         <NavLink
           to="/support"
           className={({ isActive }) =>
-            `py-2 px-3 rounded-lg text-center hover:scale-110 transition-transform duration-300 ease-in-out ${
-              isActive ? "font-semibold bg-black3 text-white" : "text-gray4"
+            `py-2 px-3 rounded-lg text-center hover:scale-110 transition-transform duration-300 ease-in-out ${isActive ? "font-semibold bg-[#1A1A1A] text-white" : "text-[#BFBFBF]"
             }`
           }
         >
@@ -87,8 +84,7 @@ function NavigationBar() {
         <NavLink
           to="/subscriptions"
           className={({ isActive }) =>
-            `py-2 px-3 rounded-lg text-center hover:scale-110 transition-transform duration-300 ease-in-out ${
-              isActive ? "font-semibold bg-black3 text-white" : "text-gray4"
+            `py-2 px-3 rounded-lg text-center hover:scale-110 transition-transform duration-300 ease-in-out ${isActive ? "font-semibold bg-[#1A1A1A] text-white" : "text-[#BFBFBF]"
             }`
           }
         >
@@ -101,19 +97,18 @@ function NavigationBar() {
 
   return (
     <div
-      className={`flex items-center justify-between md-max:bg-black px-8 py-4 sticky top-0 z-[99999] transition-all duration-300 ${
-        isScrolled ? "bg-black text-white" : "bg-transparent text-white"
-      }`}
+      className={`flex items-center justify-between px-20 xl-max:px-10 sm-max:px-3 py-4 sticky top-0 z-[99999] transition-all duration-300 ${isScrolled ? "bg-[#141414] text-white" : "bg-transparent text-white"}`}
     >
       <div>
         <img
-          className="w-28 h-auto md:w-32 lg:w-36 xl:w-40"
+          className="w-32 sm:w-36 md:w-40 lg:w-44 xl:w-48 h-auto"
           src={assets.desktopLogo}
           alt="Logo"
         />
+
       </div>
 
-      <div className="bg-black1 text-gray4 px-10 py-2 xl-max:p-3 xl-max:py-1 rounded-xl border-2 border-black4 flex gap-6 xl-max:gap-4 items-center justify-center lg-max:hidden">
+      <div className="bg-[#0F0F0F] text-[#BFBFBF] px-10 py-2 xl-max:p-3 xl-max:py-1 rounded-xl border-2 border-[#1F1F1F] flex gap-6 xl-max:gap-4 items-center justify-center lg-max:hidden">
         {navLinks}
       </div>
 
@@ -123,23 +118,20 @@ function NavigationBar() {
         <div className="relative flex items-center" ref={searchRef}>
           <form
             onSubmit={handleSearchSubmit}
-            className={`relative flex items-center transition-all duration-300 border-2 border-gray-600 rounded-full overflow-hidden ${
-              isSearchOpen ? "w-64 px-4 py-2" : "w-10 h-10 justify-center"
-            }`}
+            className={`relative flex items-center transition-all duration-300 border-2 border-gray-600 rounded-full overflow-hidden ${isSearchOpen ? "w-64 px-4 py-2" : "w-10 h-10 justify-center"
+              }`}
           >
             <FaSearch
-              className={`transition-all duration-300 ${
-                isSearchOpen ? "mr-2 text-white" : "text-white cursor-pointer"
-              }`}
+              className={`transition-all duration-300 ${isSearchOpen ? "mr-2 text-white" : "text-white cursor-pointer"
+                }`}
               onClick={toggleSearch}
             />
             <input
               type="text"
               value={search}
               onChange={handleSearchChange}
-              className={`bg-transparent text-white outline-none ${
-                isSearchOpen ? "w-full" : "w-0 opacity-0"
-              }`}
+              className={`bg-transparent text-white outline-none ${isSearchOpen ? "w-full" : "w-0 opacity-0"
+                }`}
               placeholder="Search Movies"
             />
           </form>
@@ -152,18 +144,23 @@ function NavigationBar() {
       </div>
 
       {/* Hamburger Menu for Mobile */}
-      <img
+      <svg
         onClick={openDrawer}
-        className="w-7 sm-max:w-6 lg:hidden cursor-pointer"
-        src={assets.threeLine}
-        alt="Menu Icon"
-      />
+        className="w-10 h-10 sm-max:w-8 sm-max:h-8 lg:hidden cursor-pointer"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect y="5" width="16" height="2" rx="1" fill="white" />
+        <rect y="11" width="16" height="2" rx="1" fill="white" />
+        <rect x="4" y="17" width="12" height="2" rx="1" fill="white" />
+      </svg>
 
       {/* Mobile Drawer Navigation */}
       <Drawer open={open} onClose={closeDrawer} className="p-4 bg-black">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-white">Menu</h2>
-          <IconButton variant="text" color="blue-gray" onClick={closeDrawer}>
+          <IconButton variant="text" color="white" onClick={closeDrawer}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
