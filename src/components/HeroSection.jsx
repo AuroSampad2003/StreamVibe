@@ -1,7 +1,7 @@
 import "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaPlay } from "react-icons/fa";
+import { FaPlay } from "react-icons/fa6";
 import { assets } from "../assets/assets";
 
 function HeroSection() {
@@ -84,6 +84,36 @@ function HeroSection() {
           <FaPlay className="text-white sm-max:w-4 sm-max:h-4" />
           Start Watching Now
         </button>
+
+        {/* --------------------------------------- */}
+
+        {/* <div className="flex flex-col items-center">
+          <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 flex items-center justify-center">
+            <svg
+              className="absolute top-0 left-0 w-full h-full rotate-[325deg]"
+              viewBox="0 0 100 100"
+            >
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                stroke="#E50000"
+                strokeWidth="8"
+                fill="none"
+                strokeDasharray="265 45"
+                strokeLinecap="round"
+              />
+            </svg>
+            <FaPlay className="text-[#E50000] w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-12 lg:h-12 z-10" />
+          </div>
+          <div className="mt-1 flex text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light">
+            <span className="text-white font-semibold">Stream</span>
+            <span className="text-[#E50000] font-normal">Vibe</span>
+          </div>
+        </div> */}
+
+        {/* --------------------------------------- */}
+
       </div>
     </div>
   );

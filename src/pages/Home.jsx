@@ -14,11 +14,12 @@ function Home({ setProgress }) {
   return (
     <div>
       <HeroSection />
-      <Categories setProgress={setProgress} />
-      <Devices />
-      <Faq />
-      <Plan />
+      <div id="categories"><Categories setProgress={setProgress} /></div>
+      <div id="devices"><Devices /></div>
+      <div id="pricing"><Plan /></div>
+      <div id="faq"><Faq /></div>
     </div>
+
   )
 }
 

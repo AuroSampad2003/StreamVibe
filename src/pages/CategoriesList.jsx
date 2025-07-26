@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import categoriesContext from "../context/CategoriesContext";
 import { Link, useLocation } from "react-router-dom";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 function CategoriesList() {
   const location = useLocation();
@@ -109,7 +109,7 @@ function CategoriesList() {
         {filteredGenresList.map((item) => (
           <button
             key={item.id}
-            className={`px-2 py-2 rounded-lg border  font-semibold transition-transform duration-300 hover:scale-110 ${item.name === genreName ? "bg-[#E50000] border-[#E50000]" : "bg-[#1A1A1A] border-[#262626]"
+            className={`px-2 py-2 rounded-lg border text-base xl-max:text-sm md-max:text-xs ${item.name === genreName ? "bg-[#E50000] border-[#E50000]" : "bg-[#1A1A1A] border-[#262626]"  // transition-transform duration-300 hover:scale-110
               }`}
             onClick={() => {
               setGenreName(item.name);
@@ -124,25 +124,25 @@ function CategoriesList() {
 
       {/* Items */}
       <div className="md:border md:border-[#262626] md:rounded-xl md:px-2 mt-10">
-        <h2 className="inline font-bold text-xl md:text-lg mb-2 relative bottom-4 left-9 rounded-lg px-3 py-2 bg-[#E50000]">
+        <h2 className="hidden md:inline font-bold text-xl md:text-lg mb-2 relative bottom-4 left-9 rounded-lg px-3 py-2 bg-[#E50000]">
           {genreName}
         </h2>
-        <div className="grid grid-cols-5 xl-max:grid-cols-4 md-max:grid-cols-2 sm-max:grid-cols-1 gap-7 m-10">
+        <div className="grid gap-6 sm:gap-7 m-4 sm:m-6 md:m-10 grid-cols-[repeat(auto-fill,minmax(140px,1fr))]">
           {paginatedItems.map((item) => (
             <Link
               key={item.id}
               to={`/${categoryType}/${item.id}`}
-              className="bg-[#1A1A1A] border border-[#262626] rounded-2xl p-4 hover:scale-105 hover:shadow-lg transition-transform duration-300 ease-in-out"
+              className="border border-[#262626] rounded-xl transform hover:translate-y-[-10px] transition-[background,transform] duration-500 ease-in-out"
             >
               <div>
                 <img
-                  className="rounded-lg w-[250px] mx-auto"
+                  className="w-full aspect-[2/3] rounded-xl object-cover"
                   src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}
                   alt={item.title || item.name || "Poster"}
                 />
-                <div className="text-center mt-2 font-bold">
+                {/* <div className="text-center mt-2 font-bold">
                   {item.title || item.name}
-                </div>
+                </div> */}
               </div>
             </Link>
           ))}
@@ -151,21 +151,21 @@ function CategoriesList() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center mt-4 gap-4">
+        <div className="flex justify-center mt-4 gap-2">
           <button
-            className="bg-[#0F0F0F] bg-opacity-50 border border-[#262626] p-3 rounded-full transition-transform duration-300 hover:scale-110"
+            className="w-9 h-9 flex items-center justify-center text-[#999999] rounded-full bg-[#141414] border border-[#262626] hover:bg-[#1F1F1F] transition"
             disabled={currentPage === 1}
             onClick={() => handlePageChange("prev")}
           >
-            <FaArrowLeft />
+            <ArrowLeft size={18} />
           </button>
-          <span className="px-4 py-2 text-[#BFBFBF]">{`Page ${currentPage} of ${totalPages}`}</span>
+          <span className="px-2 py-2 text-[#BFBFBF] text-xs sm:text-sm">{`Page ${currentPage} of ${totalPages}`}</span>
           <button
-            className="bg-[#0F0F0F] bg-opacity-50 border border-[#262626] p-3 rounded-full transition-transform duration-300 hover:scale-110"
+            className="w-9 h-9 flex items-center justify-center text-[#999999] rounded-full bg-[#141414] border border-[#262626] hover:bg-[#1F1F1F] transition"
             disabled={currentPage === totalPages}
             onClick={() => handlePageChange("next")}
           >
-            <FaArrowRight />
+            <ArrowRight size={18} />
           </button>
         </div>
       )}

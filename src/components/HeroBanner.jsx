@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaPlay, FaVolumeUp, FaPlus, FaArrowLeft, FaArrowRight, FaThumbsUp } from "react-icons/fa";
+import { FaPlay, FaPlus, FaThumbsUp, FaVolumeHigh, FaVolumeXmark, FaArrowLeft, FaArrowRight } from "react-icons/fa6"; // Font Awesome 6 (Free)
 import { Dialog } from "@material-tailwind/react";
 
 function HeroBanner() {
@@ -7,6 +7,10 @@ function HeroBanner() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [open, setOpen] = useState(false); // Dialog state
   const [trailerKey, setTrailerKey] = useState(null); // To store the trailer key for YouTube
+  const [isAdded, setIsAdded] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+
 
   useEffect(() => {
     fetch("https://api.themoviedb.org/3/movie/popular?language=en-US&page=1", {
@@ -80,14 +84,32 @@ function HeroBanner() {
           >
             <FaPlay /> Play Now
           </button>
-          <button className="bg-[#0F0F0F] p-3 rounded-lg text-white border border-[#262626]">
+
+          {/* Add Button (FaPlus) */}
+          <button
+            onClick={() => setIsAdded(!isAdded)}
+            className={`bg-[#0F0F0F] p-3 rounded-lg border border-[#262626] ${isAdded ? "text-[#E50000]" : "text-white"
+              }`}
+          >
             <FaPlus />
           </button>
-          <button className="bg-[#0F0F0F] p-3 rounded-lg text-white border border-[#262626]">
+
+          {/* Like Button (FaThumbsUp) */}
+          <button
+            onClick={() => setIsLiked(!isLiked)}
+            className={`bg-[#0F0F0F] p-3 rounded-lg border border-[#262626] ${isLiked ? "text-[#E50000]" : "text-white"
+              }`}
+          >
             <FaThumbsUp />
           </button>
-          <button className="bg-[#0F0F0F] p-3 rounded-lg text-white border border-[#262626]">
-            <FaVolumeUp />
+
+          {/* Volume Button (Static) */}
+          <button
+            onClick={() => setIsMuted(!isMuted)}
+            className={`bg-[#0F0F0F] p-3 rounded-lg border border-[#262626] ${isMuted ? "text-[#E50000]" : "text-white"
+              }`}
+          >
+            {isMuted ? <FaVolumeXmark /> : <FaVolumeHigh />}
           </button>
         </div>
       </div>

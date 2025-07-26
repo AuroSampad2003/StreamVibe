@@ -14,12 +14,22 @@ const ShowsSection = () => {
         <h2 className="hidden md:inline font-bold text-xl md:text-lg mb-2 relative bottom-4 left-9 rounded-lg px-3 py-2 bg-[#E50000]">
           Shows
         </h2>
+        <div id="tv-genres">
+          <Genres categoryType={categoryType} />
+        </div>
+        <div id="tv-popular">
+          <PopularGenres categoryType={categoryType} />
+        </div>
+        <div id="tv-trending">
+          <TrendingNow />
+        </div>
+        <div id="tv-new">
+          <NewReleases />
+        </div>
+        <div id="tv-top-rated">
+          <TopRated />
+        </div>
 
-        <Genres categoryType={categoryType} />
-        <PopularGenres/>
-        <TrendingNow  />
-        <NewReleases  />
-        <TopRated  />
       </div>
     </div>
   );

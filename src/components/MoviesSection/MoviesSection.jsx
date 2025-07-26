@@ -14,12 +14,11 @@ const MoviesSection = () => {
         <h2 className="hidden md:inline font-bold text-xl md:text-lg mb-2 relative bottom-4 left-9 rounded-lg px-3 py-2 bg-[#E50000]">
           Movies
         </h2>
-
-        <Genres categoryType={categoryType} />
-        <PopularGenres categoryType={categoryType} />
-        <TrendingNow  />
-        <NewReleases  />
-        <TopRated  />
+        <div id="movie-genres"><Genres categoryType={categoryType} /></div>
+        <div id="movie-popular"><PopularGenres categoryType={categoryType} /></div>
+        <div id="movie-trending"><TrendingNow /></div>
+        <div id="movie-new"><NewReleases /></div>
+        <div id="movie-top-rated"><TopRated /></div>
       </div>
     </div>
   );

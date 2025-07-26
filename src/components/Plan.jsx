@@ -1,11 +1,36 @@
 import { useState } from "react";
-import { plans } from "../assets/plan";
+// import { plans } from "../assets/plan";
 
 function Plan() {
     const [isMonthly, setIsMonthly] = useState(true);
 
+    const plans = [
+        {
+            name: "Basic Plan",
+            description:
+                "Enjoy an extensive library of movies and shows, featuring a range of content, including recently released titles.",
+            monthlyPrice: "$9.99",
+            yearlyPrice: "$99.99",
+        },
+        {
+            name: "Standard Plan",
+            description:
+                "Access to a wider selection of movies and shows, including most new releases and exclusive content.",
+            monthlyPrice: "$12.99",
+            yearlyPrice: "$129.99",
+        },
+        {
+            name: "Premium Plan",
+            description:
+                "Access to the widest selection of movies and shows, including all new releases and Offline Viewing.",
+            monthlyPrice: "$14.99",
+            yearlyPrice: "$149.99",
+        },
+    ];
+
+
     return (
-        <div className="text-white px-20 xl-max:px-10 sm-max:px-3 pb-10 mt-16">
+        <div className="text-white px-20 xl-max:px-10 sm-max:px-3 mt-2 mb-2 sm:mt-10 sm:mb-32">
 
             {/* Heading and Toggle Buttons with Responsive Wrap */}
             <h1 className="font-semibold text-4xl xl-max:text-3xl sm-max:text-2xl mb-4 ">
@@ -40,7 +65,7 @@ function Plan() {
                 {plans.map((plan, index) => (
                     <div
                         key={index}
-                        className="bg-[#1A1A1A] p-7 rounded-xl border border-[#262626] hover:scale-105 hover:shadow-lg transition-transform duration-300 ease-in-out"
+                        className="bg-[#1A1A1A] p-7 rounded-xl border border-[#262626]"
                     >
                         <h2 className="text-xl font-semibold text-white">{plan.name}</h2>
                         <p className="text-[#999999] mt-2 text-base xl-max:text-sm md-max:text-xs">{plan.description}</p>

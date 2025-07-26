@@ -152,7 +152,7 @@ function Faq() {
                         {item.number}
                       </div>
                       {/* Heading */}
-                      <div className="text-xl xl-max:text-lg md-max:text-base">
+                      <div className="text-xl xl-max:text-lg md-max:text-base font-medium">
                         {item.heading}
                       </div>
                     </div>

@@ -5,7 +5,9 @@ import Faq from '../components/Faq'
 function Support() {
   return (
     <div>
-      <ContactForm/>
+      <div id="contact-us">
+        <ContactForm />
+      </div>
       <Faq/>
     </div>
   )

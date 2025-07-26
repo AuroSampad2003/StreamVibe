@@ -5,7 +5,7 @@ const FreeTrialSection = () => {
   const navigate = useNavigate();
   
   return (
-    <div className="flex justify-center py-16 mb-10">
+    <div className="flex justify-center mb-10">
       <div className="relative w-[90%] bg-black/70 rounded-xl p-10 sm:p-10 flex flex-col sm:flex-row items-center  text-center sm:text-left">
         {/* Background Image */}
         <div

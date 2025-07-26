@@ -16,7 +16,7 @@ function Devices() {
         {devicesDetails.map((item, index) => (
           <div
             key={index}
-            className="border border-[#262626] px-14 xl-max:px-6 py-9 rounded-xl device-gradient transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:rotate-1"
+            className="border border-[#262626] px-14 xl-max:px-6 py-9 rounded-xl device-gradient"
           >
             <div className="flex items-center">
               <div className="bg-[#141414] rounded-lg p-3 border border-[#1F1F1F]">

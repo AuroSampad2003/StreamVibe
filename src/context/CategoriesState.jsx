@@ -60,7 +60,6 @@ const CategoriesState = ({ children, initialType = "movie" }) => {
   const [genresId, setGenresId] = useState(null);
   const [isFetchingGenres, setIsFetchingGenres] = useState(false);
   const [genresError, setGenresError] = useState(null);
-
   const { details: genresDetails, isFetching, error } = useFetchByGenre(genresId, categoryType);
 
   useEffect(() => {

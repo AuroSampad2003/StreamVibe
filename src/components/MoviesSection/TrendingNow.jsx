@@ -1,17 +1,16 @@
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import navigate
+import { useNavigate } from 'react-router-dom';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { FiClock } from 'react-icons/fi';
-import { FaEye } from 'react-icons/fa';
+import { FaClock, FaEye } from 'react-icons/fa';
 
 function TrendingNow() {
   const [data, setData] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
   const carouselRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const navigate = useNavigate(); // Initialize navigate function
+  const navigate = useNavigate();
 
   const responsive = {
     superLargeDesktop: { breakpoint: { max: 4000, min: 3000 }, items: 5, slidesToSlide: 5 },
@@ -34,7 +33,6 @@ function TrendingNow() {
         const res = await fetch('https://api.themoviedb.org/3/movie/popular?language=en-US&page=1', options);
         const json = await res.json();
 
-        // Now fetch runtime for each movie
         const detailedData = await Promise.all(
           json.results.map(async (movie) => {
             const resDetails = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}`, options);
@@ -43,7 +41,7 @@ function TrendingNow() {
             return {
               ...movie,
               runtime: details.runtime,
-              views: Math.floor(Math.random() * 10000) // fake views for now
+              views: Math.floor(Math.random() * 10000), // fake views
             };
           })
         );
@@ -56,18 +54,6 @@ function TrendingNow() {
     };
 
     if (isFetching) fetchTrending();
-  }, [isFetching]);
-
-  useEffect(() => {
-    if (isFetching) {
-      fetch('https://api.themoviedb.org/3/movie/popular?language=en-US&page=1', options)
-        .then(res => res.json())
-        .then(res => {
-          setData(res.results);
-          setIsFetching(false);
-        })
-        .catch(err => console.error(err));
-    }
   }, [isFetching]);
 
   const handleNext = () => {
@@ -85,8 +71,59 @@ function TrendingNow() {
   };
 
   const handleCardClick = (movieId) => {
-    navigate(`/movie/${movieId}`); // Navigate to the movie details page
+    navigate(`/movie/${movieId}`);
   };
+
+  // Responsive full-page skeleton loader
+  const renderTrendingSkeleton = () => (
+    <div className="text-white px-20 xl:px-10 md:px-6 sm:px-1 mt-16 mb-16 animate-pulse select-none">
+      {/* Heading */}
+      <div className="h-8 w-48 sm:w-36 md:w-48 bg-gray-700 rounded mb-6 mx-auto md:mx-0" />
+
+      {/* Navigation & Pagination Skeleton (desktop only) */}
+      <div className="flex justify-between items-center mb-6 px-2 md:px-0">
+        <div className="hidden md:block w-48 h-6 bg-gray-700 rounded" />
+        <div className="hidden md:flex items-center gap-3 bg-[#0F0F0F] px-1.5 py-1.5 rounded-lg border border-[#1F1F1F] shadow-md">
+          <div className="bg-[#1A1A1A] p-2.5 rounded-md border border-[#1F1F1F] w-10 h-10" />
+          <div className="flex items-center gap-[3px]">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className={`w-3 h-[2.5px] rounded-md bg-gray-800 ${i === 0 ? 'w-4 bg-gray-600' : ''}`} />
+            ))}
+          </div>
+          <div className="bg-[#1A1A1A] p-2.5 rounded-md border border-[#1F1F1F] w-10 h-10" />
+        </div>
+      </div>
+
+      {/* Carousel Skeleton */}
+      <div className="flex overflow-x-auto gap-4 no-scrollbar md:grid md:grid-flow-col md:auto-cols-[calc((100%/5)-1rem)]">
+        {[...Array(5)].map((_, idx) => (
+          <div
+            key={idx}
+            className="bg-[#232323] border border-[#303030] rounded-xl min-w-[180px] max-w-[180px] sm:min-w-[140px] sm:max-w-[140px] md:min-w-[10rem] md:max-w-[10rem] p-3 flex-shrink-0 mx-2 flex flex-col"
+          >
+            {/* Poster Skeleton */}
+            <div className="w-full aspect-[2/3] bg-[#313131] rounded-xl" />
+            {/* Runtime and Views Pills Skeleton */}
+            <div className="flex justify-between items-center mt-3">
+              <div className="w-16 h-5 bg-[#202020] rounded-full" />
+              <div className="w-12 h-5 bg-[#202020] rounded-full" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Mobile Pagination Bar Skeleton */}
+      <div className="md:hidden flex justify-center mt-4 px-2">
+        <div className="w-20 h-1 bg-gray-800 rounded-full relative">
+          <div className="h-1 bg-gray-600 rounded-full w-full"></div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (isFetching) {
+    return renderTrendingSkeleton();
+  }
 
   return (
     <div className="text-white px-20 xl:px-10 md:px-6 sm-max:px-0.5 mt-16 mb-16">
@@ -106,8 +143,7 @@ function TrendingNow() {
             {[0, 1, 2, 3].map((index) => (
               <div
                 key={index}
-                className={`w-3 h-[2.5px] rounded-md ${index === currentIndex % 4 ? "bg-[#E50000] w-4" : "bg-gray-800"
-                  }`}
+                className={`w-3 h-[2.5px] rounded-md ${index === currentIndex % 4 ? "bg-[#E50000] w-4" : "bg-gray-800"}`}
               ></div>
             ))}
           </div>
@@ -134,27 +170,25 @@ function TrendingNow() {
         {data.map((item, index) => (
           <div
             key={index}
-            className='bg-[#1A1A1A] border border-[#262626] rounded-xl mx-2 p-4 hover:scale-105 hover:shadow-lg transition-transform duration-300 ease-in-out'
-            onClick={() => handleCardClick(item.id)} // Use the handler here
+            className="bg-[#1A1A1A] border border-[#262626] rounded-xl p-3 flex-shrink-0 mx-2 cursor-pointer transform hover:translate-y-[-10px] transition-[background,transform] duration-500 ease-in-out"
+            onClick={() => handleCardClick(item.id)}
           >
             <img
-              className='w-full h-[270px] rounded-xl object-fill'
+              className="w-full aspect-[2/3] rounded-xl object-cover"
               src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}
-              alt="Loading..."
+              alt={item.title || "Movie poster"}
             />
 
             <div className="flex justify-between items-center mt-3">
               {/* Runtime */}
-              <div className="flex items-center gap-1 px-1.5 py-1 rounded-full bg-[#141414] border border-[#262626] text-[#999999] text-sm">
-                <FiClock className="text-base" />
-                {item.runtime
-                  ? `${Math.floor(item.runtime / 60)}h ${item.runtime % 60}min`
-                  : 'N/A'}
+              <div className="flex items-center gap-[2px] sm:gap-1 px-1 py-[2px] sm:px-1.5 sm:py-1 rounded-full bg-[#141414] border border-[#262626] text-[#999999] text-xs sm:text-sm">
+                <FaClock className="text-xs sm:text-sm" />
+                {item.runtime ? `${Math.floor(item.runtime / 60)}h ${item.runtime % 60}min` : 'N/A'}
               </div>
 
               {/* Views */}
-              <div className="flex items-center gap-1 px-1.5 py-1 rounded-full bg-[#141414] border border-[#262626] text-[#999999] text-sm">
-                <FaEye className="text-base" />
+              <div className="flex items-center gap-[2px] sm:gap-1 px-1 py-[2px] sm:px-1.5 sm:py-1 rounded-full bg-[#141414] border border-[#262626] text-[#999999] text-xs sm:text-sm">
+                <FaEye className="text-xs sm:text-sm" />
                 {typeof item.views === 'number'
                   ? item.views >= 1000
                     ? `${(item.views / 1000).toFixed(1)}K`
@@ -162,7 +196,6 @@ function TrendingNow() {
                   : 'N/A'}
               </div>
             </div>
-
           </div>
         ))}
       </Carousel>
@@ -173,7 +206,7 @@ function TrendingNow() {
           <div
             className="h-1 bg-[#E50000] rounded-full"
             style={{ width: data.length > 0 ? `${(currentIndex / data.length) * 100}%` : "0%" }}
-          ></div>
+          />
         </div>
       </div>
     </div>
