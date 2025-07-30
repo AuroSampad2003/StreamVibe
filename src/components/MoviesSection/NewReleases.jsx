@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { FaRegCalendarAlt } from 'react-icons/fa';
 
 function NewReleases() {
   const [data, setData] = useState([]);
@@ -122,9 +123,8 @@ function NewReleases() {
             {[0, 1, 2, 3].map((index) => (
               <div
                 key={index}
-                className={`w-3 h-[2.5px] rounded-md ${
-                  index === currentIndex % 4 ? "bg-[#E50000] w-4" : "bg-gray-800"
-                }`}
+                className={`w-3 h-[2.5px] rounded-md ${index === currentIndex % 4 ? "bg-[#E50000] w-4" : "bg-gray-800"
+                  }`}
               ></div>
             ))}
           </div>
@@ -159,13 +159,16 @@ function NewReleases() {
               src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}
               alt={item.title || "Movie poster"}
             />
-            <h1 className="text-center text-xs sm:text-sm text-[#999999] bg-[#141414] px-2 py-1 w-full mx-auto mt-3 border border-[#262626] rounded-3xl">
-              Released at{" "}
+            <h1 className="text-center text-xs sm:text-sm text-[#999999] bg-[#141414] px-2 py-1 w-full mx-auto mt-3 border border-[#262626] rounded-3xl flex items-center justify-center gap-1">
+              {/* Icon visible only on small screens */}
+              <FaRegCalendarAlt className="sm:hidden text-xs sm:text-sm text-[#BFBFBF]" />
+              {/* Text visible only on sm and larger */}
+              <span className="hidden sm:inline">Released at</span>
               <span className="text-xs sm:text-sm text-[#BFBFBF]">
                 {new Date(item.release_date).toLocaleDateString('en-GB', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric'
+                  year: "numeric",
+                month: "long",
+                day: "numeric",
                 })}
               </span>
             </h1>

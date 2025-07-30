@@ -6,24 +6,23 @@ import CategoriesContext from "../../context/CategoriesContext";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // eslint-disable-next-line react/prop-types
-function PopularGenres({ categoryType = "movie" }) { // Default to 'movie' if no prop is passed
+function PopularGenres({ categoryType = "movie" }) {
   const navigate = useNavigate();
   const carouselRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const {
     setCategoryType,
-    genresList,
-    genresDetails,
+    genresList = [],
+    genresDetails = [],
     isFetchingGenres,
-    isFetching
+    isFetching,
   } = useContext(CategoriesContext);
 
   useEffect(() => {
     if (setCategoryType) {
       setCategoryType(categoryType);
     }
-    // ⚡ Only set it if it's different, to avoid unnecessary context updates
   }, [categoryType, setCategoryType]);
 
   const responsive = {
@@ -33,59 +32,58 @@ function PopularGenres({ categoryType = "movie" }) { // Default to 'movie' if no
     mobile: { breakpoint: { max: 768, min: 0 }, items: 1 },
   };
 
-  // const { genresList, genresDetails } = useContext(CategoriesContext);
-
   // Filter genres based on the categoryType (movie or tv)
   const filteredGenres = genresList.filter((genre) => {
     return categoryType === "movie"
-      ? ![10770, 37].includes(genre.id) // Avoid tv and other non-movie genres
-      : ![99, 10402, 9648].includes(genre.id); // Avoid movie genres for TV
+      ? ![10770, 37].includes(genre.id) // avoid some tv genres if category is movie
+      : ![99, 10402, 9648].includes(genre.id); // avoid some movie genres if category is tv
   });
 
-  // Function to handle navigation
   const handleNext = () => {
     if (carouselRef.current) {
       carouselRef.current.next();
-      setCurrentIndex((prev) => prev + 1);
+      setCurrentIndex((prev) => (prev + 1) % filteredGenres.length);
     }
   };
 
   const handlePrev = () => {
     if (carouselRef.current) {
       carouselRef.current.previous();
-      setCurrentIndex((prev) => prev - 1);
+      setCurrentIndex((prev) =>
+        prev === 0 ? filteredGenres.length - 1 : prev - 1
+      );
     }
   };
 
-  // Responsive full-page skeleton loader
   const renderFullPageSkeleton = () => (
     <div className="text-white px-5 sm:px-3 md:px-10 lg:px-20 mt-8 mb-16 animate-pulse select-none">
       {/* Heading Skeleton */}
-      <div className="h-8 w-48 sm:w-36 md:w-48 bg-gray-700 rounded mb-6 mx-auto md:mx-0"></div>
+      <div className="h-8 w-48 sm:w-36 md:w-48 bg-gray-700 rounded mb-6 mx-auto md:mx-0" />
 
       {/* Navigation & Pagination Skeleton */}
       <div className="flex justify-between items-center mb-6 px-2 md:px-0">
         {/* Left blank area on md+ */}
-        <div className="hidden md:block w-48 h-6 bg-gray-700 rounded"></div>
+        <div className="hidden md:block w-48 h-6 bg-gray-700 rounded" />
 
         {/* Navigation buttons: visible on md+ */}
         <div className="hidden md:flex items-center gap-3 bg-[#0F0F0F] px-1.5 py-1.5 rounded-lg border border-[#1F1F1F] shadow-md">
           {/* Prev Button Skeleton */}
-          <div className="bg-[#1A1A1A] p-2.5 rounded-md border border-[#1F1F1F] w-10 h-10"></div>
+          <div className="bg-[#1A1A1A] p-2.5 rounded-md border border-[#1F1F1F] w-10 h-10" />
 
           {/* Pagination Dots Skeleton */}
           <div className="flex items-center gap-[3px]">
             {[0, 1, 2, 3].map((index) => (
               <div
                 key={index}
-                className={`w-3 h-[2.5px] rounded-md bg-gray-800 ${index === 0 ? "w-4 bg-gray-600" : ""
-                  }`}
-              ></div>
+                className={`w-3 h-[2.5px] rounded-md bg-gray-800 ${
+                  index === 0 ? "w-4 bg-gray-600" : ""
+                }`}
+              />
             ))}
           </div>
 
           {/* Next Button Skeleton */}
-          <div className="bg-[#1A1A1A] p-2.5 rounded-md border border-[#1F1F1F] w-10 h-10"></div>
+          <div className="bg-[#1A1A1A] p-2.5 rounded-md border border-[#1F1F1F] w-10 h-10" />
         </div>
       </div>
 
@@ -105,6 +103,7 @@ function PopularGenres({ categoryType = "movie" }) { // Default to 'movie' if no
                 />
               ))}
             </div>
+
             {/* Text and button placeholders */}
             <div className="flex justify-between items-center px-1 mt-4">
               <div className="w-20 sm:w-16 h-5 sm:h-4 bg-[#313131] rounded-md" />
@@ -117,13 +116,12 @@ function PopularGenres({ categoryType = "movie" }) { // Default to 'movie' if no
       {/* Small screen pagination skeleton */}
       <div className="md:hidden flex justify-center mt-4 px-2">
         <div className="w-20 h-1 bg-gray-800 rounded-full relative">
-          <div className="h-1 bg-gray-600 rounded-full w-full"></div>
+          <div className="h-1 bg-gray-600 rounded-full w-full" />
         </div>
       </div>
     </div>
   );
 
-  // Use skeleton loader while fetching genres or details
   if (isFetchingGenres || isFetching) {
     return renderFullPageSkeleton();
   }
@@ -131,11 +129,14 @@ function PopularGenres({ categoryType = "movie" }) { // Default to 'movie' if no
   return (
     <div className="text-white px-20 xl:px-10 sm-max:px-0.5 mt-16 mb-16">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="font-bold text-2xl lg:text-2xl sm:text-xl">Popular Top 10 In Genres</h2>
+        <h2 className="font-bold text-2xl lg:text-2xl sm:text-xl">
+          Popular Top 10 In Genres
+        </h2>
 
         {/* Custom Navigation Buttons (Only for Large Screens) */}
         <div className="hidden md:flex items-center gap-3 bg-[#0F0F0F] px-1.5 py-1.5 rounded-lg border border-[#1F1F1F] shadow-md">
           <button
+            aria-label="Previous genres"
             onClick={handlePrev}
             className="bg-[#1A1A1A] p-2.5 rounded-md border border-[#1F1F1F] hover:bg-[#1F1F1F] transition-all"
           >
@@ -146,13 +147,17 @@ function PopularGenres({ categoryType = "movie" }) { // Default to 'movie' if no
             {[0, 1, 2, 3].map((index) => (
               <div
                 key={index}
-                className={`w-3 h-[2.5px] rounded-md ${index === currentIndex % 4 ? "bg-[#E50000] w-4" : "bg-gray-800"
-                  }`}
-              ></div>
+                className={`w-3 h-[2.5px] rounded-md ${
+                  index === currentIndex % 4
+                    ? "bg-[#E50000] w-4"
+                    : "bg-gray-800"
+                }`}
+              />
             ))}
           </div>
 
           <button
+            aria-label="Next genres"
             onClick={handleNext}
             className="bg-[#1A1A1A] p-2.5 rounded-md border border-[#1F1F1F] hover:bg-[#1F1F1F] transition-all"
           >
@@ -170,18 +175,20 @@ function PopularGenres({ categoryType = "movie" }) { // Default to 'movie' if no
         arrows={false}
         swipeable={true}
         draggable={true}
-        beforeChange={(nextSlide) => setCurrentIndex(nextSlide % filteredGenres.length)}
+        beforeChange={(nextSlide) =>
+          setCurrentIndex(nextSlide % filteredGenres.length)
+        }
       >
-        {filteredGenres.map((genre, index) => {
+        {filteredGenres.map((genre) => {
           const top10InGenre = genresDetails
-            .filter((item) => item.genre_ids.includes(genre.id))
+            .filter((item) => item.genre_ids?.includes(genre.id))
             .sort((a, b) => b.popularity - a.popularity)
-            .slice(0, 10); // Top 10 popular in this genre
+            .slice(0, 10);
 
           return (
             <div
               className="bg-[#1A1A1A] border border-[#262626] p-4 rounded-xl mx-2 hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
-              key={index}
+              key={genre.id}
               onClick={() =>
                 navigate("/topGenreList", {
                   state: {
@@ -195,12 +202,14 @@ function PopularGenres({ categoryType = "movie" }) { // Default to 'movie' if no
               {/* Thumbnails */}
               <div className="grid grid-cols-2 gap-2">
                 {top10InGenre.length > 0 ? (
-                  top10InGenre.slice(0, 4).map((item, idx) => (
-                    <div key={idx}>
+                  top10InGenre.slice(0, 4).map((item) => (
+                    <div key={item.id}>
                       <img
                         className="rounded-lg w-full h-24 object-cover"
-                        src={`https://image.tmdb.org/t/p/w500/${item.backdrop_path || item.poster_path}`}
-                        alt={item.title || item.name}
+                        src={`https://image.tmdb.org/t/p/w500/${
+                          item.backdrop_path || item.poster_path
+                        }`}
+                        alt={item.title || item.name || "Untitled"}
                       />
                     </div>
                   ))
@@ -219,7 +228,10 @@ function PopularGenres({ categoryType = "movie" }) { // Default to 'movie' if no
                   </div>
                   <h2 className="text-lg font-semibold">{genre.name}</h2>
                 </div>
-                <button className="bg-[#262626] p-2 rounded-md hover:bg-gray-800 transition-all">
+                <button
+                  aria-label={`See more ${genre.name}`}
+                  className="bg-[#262626] p-2 rounded-md hover:bg-gray-800 transition-all"
+                >
                   <ChevronRight className="text-white w-5 h-5" />
                 </button>
               </div>
@@ -234,11 +246,12 @@ function PopularGenres({ categoryType = "movie" }) { // Default to 'movie' if no
           <div
             className="h-1 bg-[#E50000] rounded-full"
             style={{
-              width: filteredGenres.length > 0
-                ? `${(currentIndex / filteredGenres.length) * 100}%`
-                : "0%",
+              width:
+                filteredGenres.length > 0
+                  ? `${(currentIndex / filteredGenres.length) * 100}%`
+                  : "0%",
             }}
-          ></div>
+          />
         </div>
       </div>
     </div>
@@ -246,4 +259,3 @@ function PopularGenres({ categoryType = "movie" }) { // Default to 'movie' if no
 }
 
 export default PopularGenres;
-

@@ -80,7 +80,7 @@ function HeroBanner() {
           {/* Play Now Button */}
           <button
             onClick={handlePlayClick}
-            className="bg-[#E50000] hover:bg-red-900 px-4 py-3 rounded-lg flex items-center gap-2 text-white font-semibold"
+            className="bg-[#E50000] hover:bg-red-900 px-4 py-3 rounded-lg flex items-center gap-2 text-white text-base xl-max:text-sm md-max:text-sm"
           >
             <FaPlay /> Play Now
           </button>
