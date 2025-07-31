@@ -358,7 +358,7 @@ function NavigationBar() {
                     <form
                       onSubmit={handleSearchSubmit}
                       ref={searchBoxRef}
-                      className="w-full flex items-center gap-3 backdrop-blur-md bg-[#1A1A1A]/70 text-white border border-white/10 rounded-xl px-4 py-3 shadow-lg sm:rounded-full sm:px-6 sm:py-4"
+                      className="w-full flex items-center gap-3 backdrop-blur-md bg-[#1A1A1A]/70 text-white border border-white/10 rounded-xl px-4 py-3 sm:rounded-full sm:px-6 sm:py-4"
                     >
                       <FaMagnifyingGlass className="text-white w-5 h-5" />
                       <input
@@ -382,17 +382,17 @@ function NavigationBar() {
                     </form>
                     {/* Suggestions Dropdown */}
                     {(isSuggesting || suggestions.length > 0) && (
-                      <div className="absolute left-0 top-full w-full bg-[#212121] border border-white/10 shadow-lg rounded-xl mt-2 z-50 overflow-y-auto max-h-96 ring-1 ring-white/15">
+                      <div className="absolute left-0 top-full w-full backdrop-blur-md bg-[#1A1A1A]/70 text-[#999999] border border-white/10 rounded-xl mt-2 z-50 overflow-y-auto max-h-96 ring-1 ring-white/15">
                         {isSuggesting ? (
-                          <div className="text-center text-gray-400 py-4 text-sm">Loading...</div>
+                          <div className="text-center text-gray-400 py-4 text-xs sm:text-sm">Loading...</div>
                         ) : suggestions.length === 0 ? (
-                          <div className="text-center text-gray-400 py-4 text-sm">No Results</div>
+                          <div className="text-center text-gray-400 py-4 text-xs sm:text-sm">No Results</div>
                         ) : (
                           suggestions.map((item) => (
                             <div
                               key={item.id + item.media_type}
                               onClick={() => handleSuggestionClick(item)}
-                              className="flex items-center px-4 py-3 gap-3 cursor-pointer hover:bg-[#333] transition duration-150"
+                              className="flex items-center px-4 py-3 gap-3 cursor-pointer hover:bg-[#1A1A1A]/80 transition duration-150"
                             >
                               <img
                                 src={
@@ -406,10 +406,10 @@ function NavigationBar() {
                                 className="w-10 h-14 rounded object-cover flex-shrink-0"
                               />
                               <div className="flex flex-col overflow-hidden">
-                                <span className="font-medium truncate text-white">
+                                <span className="font-medium truncate text-white text-sm sm:text-base">
                                   {item.title || item.name}
                                 </span>
-                                <span className="text-xs text-gray-400 truncate">
+                                <span className="text-xs sm:text-sm text-gray-400 truncate">
                                   {item.media_type === "movie" ? "Movie" : "Show"}
                                   {(item.release_date || item.first_air_date) &&
                                     ` (${(item.release_date || item.first_air_date).slice(0, 4)})`}
