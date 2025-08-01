@@ -307,7 +307,8 @@ function MovieDetails() {
 
       {/* Info Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start mt-10">
-        {/* Left: Description, Cast, Reviews */}
+        
+        {/* Left Section */}
         <div className="space-y-8 order-2 lg:order-1 lg:col-span-2">
           {/* Seasons and Episodes */}
           {categoryType === "tv" && (
@@ -339,28 +340,30 @@ function MovieDetails() {
                       )}
                     </span>
                   </button>
-
+                      
                   {expandedSeason === season.season_number && episodesMap[season.season_number] && (
                     <>
+                    {/* For small screen */}
                       <div className="sm:hidden space-y-4 p-4">
                         {episodesMap[season.season_number].map((episode, i) => (
                           <div key={episode.id} className="bg-[#141414] p-4 rounded-lg space-y-4">
                             <div className="flex items-center gap-4">
-                              <div className="relative w-full">
+                              <div className="relative">
                                 <img
                                   src={
                                     episode.still_path
-                                      ? `https://image.tmdb.org/t/p/w500${episode.still_path}`
-                                      : "https://img.freepik.com/premium-vector/human-icon_970584-3.jpg?semt=ais_hybrid&w=740"
+                                      ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
+                                      : assets.defaultImage
                                   }
                                   alt={episode.name}
-                                  className="w-full rounded-lg object-cover border border-[#262626]"
+                                  loading="lazy"
+                                  className="w-[180px] h-[105px] rounded-lg object-cover border border-[#262626]"
                                 />
                                 <button
                                   onClick={handleOpen}
                                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-[#0F0F0F] bg-opacity-70 rounded-full border-2 border-white"
                                 >
-                                  <FaPlay className="text-white text-sm md-max:text-xs opacity-90" />
+                                  <FaPlay className="text-white text-sm opacity-90" />
                                 </button>
                               </div>
 
@@ -379,6 +382,7 @@ function MovieDetails() {
                         ))}
                       </div>
 
+                        {/* For large screen */}
                       <div className="hidden sm:block">
                         {episodesMap[season.season_number].map((episode, i) => (
                           <React.Fragment key={episode.id}>
@@ -392,9 +396,10 @@ function MovieDetails() {
                                   src={
                                     episode.still_path
                                       ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
-                                      : "https://img.freepik.com/premium-vector/human-icon_970584-3.jpg?semt=ais_hybrid&w=740"
+                                      : assets.defaultImage
                                   }
                                   alt={episode.name}
+                                  loading="lazy"
                                   className="w-[120px] h-[70px] rounded-lg object-cover border border-[#262626]"
                                 />
                                 <button
