@@ -6,11 +6,13 @@ import { assets } from "../assets/assets";
 function SearchList() {
   const location = useLocation();
   const search = location.state?.search || "";
-  const [movieList, setMovieList] = useState([]);
+  const [mediaList, setMediaList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const itemsPerPage = 20;
 
-  const totalPages = Math.ceil(movieList.length / itemsPerPage);
+  const totalPages = Math.ceil(mediaList.length / itemsPerPage);
 
   const handlePageChange = (direction) => {
     window.scrollTo(0, 0);
@@ -21,13 +23,16 @@ function SearchList() {
     );
   };
 
-  const paginatedMovies = movieList.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
   useEffect(() => {
-    if (!search) return;
+    if (!search) {
+      setMediaList([]);
+      setCurrentPage(1);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setCurrentPage(1);
 
     const options = {
       method: "GET",
@@ -39,17 +44,34 @@ function SearchList() {
     };
 
     fetch(
-      `https://api.themoviedb.org/3/search/movie?query=${search}&include_adult=false&language=en-US&page=1`,
+      `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
+        search
+      )}&include_adult=false&language=en-US&page=1`,
       options
     )
       .then((res) => res.json())
       .then((response) => {
-        setMovieList(response.results || []);
+        // Filter to only movies and tv shows with poster or backdrop image
+        const filteredResults = (response.results || []).filter(
+          (item) =>
+            (item.media_type === "movie" || item.media_type === "tv") &&
+            (item.poster_path || item.backdrop_path)
+        );
+        setMediaList(filteredResults);
       })
       .catch((error) => {
         console.error("Error fetching search results:", error);
-      });
+        setError("Failed to fetch results. Please try again.");
+        setMediaList([]);
+      })
+      .finally(() => setLoading(false));
   }, [search]);
+
+  // Paginated items for current page
+  const paginatedMedia = mediaList.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="text-white px-20 xl-max:px-10 sm-max:px-3 mt-5 mb-5">
@@ -61,47 +83,65 @@ function SearchList() {
           {search ? `Search Result of "${search.trim()}"` : "Search Results"}
         </h2>
 
-
-
-        {movieList.length === 0 ? (
+        {loading ? (
+          <p className="text-center text-gray-400 mt-20 text-sm">Loading...</p>
+        ) : error ? (
+          <p className="text-center text-red-500 mt-20 text-sm">{error}</p>
+        ) : mediaList.length === 0 ? (
           <p className="text-center text-[#999999] mt-20 text-sm">No results found.</p>
         ) : (
           <div className="grid gap-6 sm:gap-7 m-4 sm:m-6 md:m-10 grid-cols-[repeat(auto-fill,minmax(140px,1fr))]">
-            {paginatedMovies.map((item) => (
-              <Link
-                key={item.id}
-                to={`/movie/${item.id}`}
-                className="flex flex-col items-center"
-              >
-                {/* Poster Card */}
-                <div className="border border-[#262626] rounded-xl transform hover:translate-y-[-10px] transition duration-500 ease-in-out overflow-hidden">
-                  <img
-                    className="w-full aspect-[2/3] object-cover rounded-xl"
-                    src={
-                      item.poster_path
-                        ? `https://image.tmdb.org/t/p/w500/${item.poster_path}`
-                        : assets.defaultImage
-                    }
-                    alt={item.title || "Poster"}
-                  />
-                </div>
+            {paginatedMedia.map((item) => {
+              const linkTo = item.media_type === "tv" ? `/tv/${item.id}` : `/movie/${item.id}`;
+              const title = item.title || item.name || "Untitled";
 
-                {/* Title outside the card */}
-                <div className="mt-2 text-center font-medium text-xs sm:text-sm text-white max-w-[140px] line-clamp-2">
-                  {item.title}
-                </div>
-              </Link>
+              const imgSrc = item.poster_path
+                ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+                : item.backdrop_path
+                ? `https://image.tmdb.org/t/p/w500${item.backdrop_path}`
+                : assets.defaultImage;
 
-            ))}
+              return (
+                <Link
+                  key={`${item.media_type}_${item.id}`}
+                  to={linkTo}
+                  className="flex flex-col items-center"
+                  title={`Go to details for ${title}`}
+                >
+                  {/* Poster Card */}
+                  <div className="border border-[#262626] rounded-xl transform hover:translate-y-[-10px] transition duration-500 ease-in-out overflow-hidden">
+                    <img
+                      className="w-full aspect-[2/3] object-cover rounded-xl"
+                      src={imgSrc}
+                      alt={title}
+                      loading="lazy"
+                    />
+                  </div>
+
+                  {/* Title outside the card */}
+                  <div className="mt-2 text-center font-medium text-xs sm:text-sm text-white max-w-[140px] line-clamp-2">
+                    {title}
+                  </div>
+
+                  {/* Media type and year */}
+                  <div className="text-xs sm:text-sm text-gray-400">
+                    {item.media_type === "movie" ? "Movie" : "TV Show"}
+                    {(item.release_date || item.first_air_date) &&
+                      ` (${(item.release_date || item.first_air_date).slice(0, 4)})`}
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>
 
       {/* Pagination Controls */}
-      {totalPages > 1 && (
+      {totalPages > 1 && !loading && !error && (
         <div className="flex justify-center mt-4 gap-2">
           <button
-            className="w-9 h-9 flex items-center justify-center text-[#999999] rounded-full bg-[#141414] border border-[#262626] hover:bg-[#1F1F1F] transition"
+            aria-label="Previous page"
+            className="w-9 h-9 flex items-center justify-center text-[#999999] rounded-full bg-[#141414] border border-[#262626] hover:bg-[#1F1F1F] transition disabled:opacity-40"
             disabled={currentPage === 1}
             onClick={() => handlePageChange("prev")}
           >
@@ -111,7 +151,8 @@ function SearchList() {
             {`Page ${currentPage} of ${totalPages}`}
           </span>
           <button
-            className="w-9 h-9 flex items-center justify-center text-[#999999] rounded-full bg-[#141414] border border-[#262626] hover:bg-[#1F1F1F] transition"
+            aria-label="Next page"
+            className="w-9 h-9 flex items-center justify-center text-[#999999] rounded-full bg-[#141414] border border-[#262626] hover:bg-[#1F1F1F] transition disabled:opacity-40"
             disabled={currentPage === totalPages}
             onClick={() => handlePageChange("next")}
           >

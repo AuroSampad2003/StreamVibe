@@ -27,6 +27,7 @@ function NavigationBar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [isSuggesting, setIsSuggesting] = useState(false);
+  //const suggestionRef = useRef(null);
   const searchTriggerRef = useRef(null);
   const searchBoxRef = useRef(null);
   const [notifications, setNotifications] = useState([]);
@@ -76,6 +77,7 @@ function NavigationBar() {
   }, [debouncedSearch, isSearchOpen]);
 
   const handleSuggestionClick = (item) => {
+    console.log("Suggestion clicked:", item.media_type, item.id);
     setIsSearchOpen(false);
     setSearch("");
     setSuggestions([]);
@@ -103,8 +105,10 @@ function NavigationBar() {
         searchBoxRef.current &&
         !searchBoxRef.current.contains(event.target)
       ) {
-        setIsSearchOpen(false);
-        setSuggestions([]);
+        setTimeout(() => {
+          setIsSearchOpen(false);
+          setSuggestions([]);
+        }, 100); // small delay
       }
     }
     if (isSearchOpen) {
@@ -304,8 +308,8 @@ function NavigationBar() {
         {/* Top Navbar */}
         <div
           className={`flex items-center justify-between px-20 xl-max:px-10 sm-max:px-3 py-4 transition-all duration-300 ${isScrolled
-              ? "bg-[#141414] text-white"
-              : "bg-transparent text-white"
+            ? "bg-[#141414] text-white"
+            : "bg-transparent text-white"
             }`}
         >
           {/* Logo */}
@@ -341,8 +345,8 @@ function NavigationBar() {
 
           <div className="flex items-center gap-4">
             {/* Search */}
-            <div className="relative">
-              <div className="hidden w-10 h-10 sm:flex items-center justify-center " ref={searchTriggerRef}>
+            <div className="relative" ref={searchTriggerRef}>
+              <div className="hidden w-10 h-10 sm:flex items-center justify-center ">
                 <button
                   onClick={() => setIsSearchOpen(true)}
                   className="text-white focus:outline-none"
@@ -391,6 +395,7 @@ function NavigationBar() {
                           suggestions.map((item) => (
                             <div
                               key={item.id + item.media_type}
+                              onMouseDown={() => handleSuggestionClick(item)}
                               onClick={() => handleSuggestionClick(item)}
                               className="flex items-center px-4 py-3 gap-3 cursor-pointer hover:bg-[#1A1A1A]/80 transition duration-150"
                             >
