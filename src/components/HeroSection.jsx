@@ -51,8 +51,12 @@ function HeroSection() {
             <div key={index}>
               <img
                 className="rounded-lg md-max:rounded"
-                src={`https://image.tmdb.org/t/p/w500/${data.backdrop_path}`}
-                alt="Movie Poster"
+                src={
+                  data.backdrop_path
+                    ? `https://image.tmdb.org/t/p/w500/${data.backdrop_path}`
+                    : assets.defaultImage
+                }
+                alt={assets.defaultImage}
               />
             </div>
           );

@@ -89,14 +89,14 @@ function CategoriesList() {
       {/* Toggle Button */}
       <div className="flex justify-center bg-[#0F0F0F] p-1 rounded-lg border border-[#262626] w-fit mb-5 mx-auto">
         <button
-          className={`px-6 py-2 rounded-lg transition-all ${categoryType === "movie" ? "bg-[#1F1F1F] text-white" : "text-[#999999]"
+          className={`px-6 py-2 text-base xl-max:text-sm md-max:text-sm  rounded-lg transition-all ${categoryType === "movie" ? "bg-[#1F1F1F] text-white" : "text-[#999999]"
             }`}
           onClick={() => setCategoryType("movie")}
         >
           Movies
         </button>
         <button
-          className={`px-6 py-2 rounded-lg transition-all ${categoryType === "tv" ? "bg-[#1F1F1F] text-white" : "text-[#999999]"
+          className={`px-6 py-2 rounded-lg text-base xl-max:text-sm md-max:text-sm  transition-all ${categoryType === "tv" ? "bg-[#1F1F1F] text-white" : "text-[#999999]"
             }`}
           onClick={() => setCategoryType("tv")}
         >

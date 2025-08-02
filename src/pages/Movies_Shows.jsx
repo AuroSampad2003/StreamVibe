@@ -8,27 +8,31 @@ function Movies_Shows() {
   const [showMovies, setShowMovies] = useState(true);
 
   return (
-    <div className='text-white'>
+    <div className="text-white">
       <HeroBanner />
 
       {/* Toggle Buttons */}
-      <div className='md:hidden flex justify-center items-center bg-[#0F0F0F] p-1 rounded-lg border border-[#262626] w-fit mx-auto mb-2'>
+      <div className="md:hidden flex justify-center items-center bg-[#0F0F0F] p-1 rounded-lg border border-[#262626] w-fit mx-auto mb-2">
         <button
-          className={`px-12 py-2 rounded-lg text-base xl-max:text-sm md-max:text-sm transition-all ${showMovies ? "bg-[#1F1F1F] text-white" : "text-[#999999]"}`}
+          className={`px-12 py-2 rounded-lg text-base xl-max:text-sm md-max:text-sm transition-all ${
+            showMovies ? 'bg-[#1F1F1F] text-white' : 'text-[#999999]'
+          }`}
           onClick={() => setShowMovies(true)}
         >
           Movies
         </button>
         <button
-          className={`px-12 py-2 rounded-lg text-base xl-max:text-sm md-max:text-sm transition-all ${!showMovies ? "bg-[#1F1F1F] text-white" : "text-[#999999]"}`}
+          className={`px-12 py-2 rounded-lg text-base xl-max:text-sm md-max:text-sm transition-all ${
+            !showMovies ? 'bg-[#1F1F1F] text-white' : 'text-[#999999]'
+          }`}
           onClick={() => setShowMovies(false)}
         >
-          Shows
+          TV Shows
         </button>
       </div>
 
       {/* Always show both on large screens */}
-      <div className='hidden md:block'>
+      <div className="hidden md:block">
         <CategoriesState initialType="movie">
           <MoviesSection />
         </CategoriesState>
@@ -38,7 +42,7 @@ function Movies_Shows() {
       </div>
 
       {/* Toggle view on small screens */}
-      <div className='md:hidden'>
+      <div className="md:hidden">
         {showMovies ? (
           <CategoriesState initialType="movie">
             <MoviesSection />

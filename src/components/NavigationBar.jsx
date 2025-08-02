@@ -20,6 +20,35 @@ function useDebounce(value, delay) {
   return debounced;
 }
 
+function formatRelativeTime(timestamp) {
+  const now = new Date();
+  const notifDate = new Date(timestamp);
+  const diffMs = now - notifDate;
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHour = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHour / 24);
+
+  // "x min ago"
+  if (diffMin < 1) return `${diffSec}s ago`;
+  if (diffHour < 1) return `${diffMin}min ago`;
+  // "x h ago"
+  if (diffDay < 1 && now.getDate() === notifDate.getDate()) return `${diffHour}h ago`;
+  // "yesterday"
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  if (
+    notifDate.getFullYear() === yesterday.getFullYear() &&
+    notifDate.getMonth() === yesterday.getMonth() &&
+    notifDate.getDate() === yesterday.getDate()
+  ) {
+    return "yesterday";
+  }
+  // Default: show date
+  return notifDate.toLocaleDateString();
+}
+
+
 function NavigationBar() {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -369,7 +398,7 @@ function NavigationBar() {
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search Here..."
+                        placeholder="Search Movies & TV Shows"
                         className="flex-grow bg-transparent text-white placeholder-gray-300 outline-none text-sm"
                         autoFocus
                       />
@@ -473,8 +502,9 @@ function NavigationBar() {
                             {notif.message}
                           </p>
                           <p className="text-[#999999] text-[10px] sm:text-xs mt-1">
-                            {new Date(notif.timestamp).toLocaleString()}
+                            {formatRelativeTime(notif.timestamp)}
                           </p>
+
                         </div>
                       </div>
                     ))
