@@ -90,7 +90,7 @@ function SearchList() {
         ) : mediaList.length === 0 ? (
           <p className="text-center text-[#999999] mt-20 text-sm">No results found.</p>
         ) : (
-          <div className="grid gap-6 sm:gap-7 m-4 sm:m-6 md:m-10 grid-cols-[repeat(auto-fill,minmax(140px,1fr))]">
+          <div className="grid gap-4 sm:gap-5 md:gap-6 m-2 sm:m-4 md:m-6 lg:m-10 grid-cols-[repeat(auto-fill,minmax(100px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(140px,1fr))]">
             {paginatedMedia.map((item) => {
               const linkTo = item.media_type === "tv" ? `/tv/${item.id}` : `/movie/${item.id}`;
               const title = item.title || item.name || "Untitled";
@@ -98,8 +98,8 @@ function SearchList() {
               const imgSrc = item.poster_path
                 ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
                 : item.backdrop_path
-                ? `https://image.tmdb.org/t/p/w500${item.backdrop_path}`
-                : assets.defaultImage;
+                  ? `https://image.tmdb.org/t/p/w500${item.backdrop_path}`
+                  : assets.defaultImage;
 
               return (
                 <Link
@@ -109,9 +109,9 @@ function SearchList() {
                   title={`Go to details for ${title}`}
                 >
                   {/* Poster Card */}
-                  <div className="border border-[#262626] rounded-xl transform hover:translate-y-[-10px] transition duration-500 ease-in-out overflow-hidden">
+                  <div className="border border-[#262626] rounded-xl transform hover:translate-y-[-10px] transition-[background,transform] duration-500 ease-in-out overflow-hidden">
                     <img
-                      className="w-full aspect-[2/3] object-cover rounded-xl"
+                      className="w-full aspect-[3/4] object-cover rounded-xl"
                       src={imgSrc}
                       alt={title}
                       loading="lazy"
@@ -119,12 +119,12 @@ function SearchList() {
                   </div>
 
                   {/* Title outside the card */}
-                  <div className="mt-2 text-center font-medium text-xs sm:text-sm text-white max-w-[140px] line-clamp-2">
+                  <div className="mt-1 text-center font-medium text-xs sm:text-sm text-white max-w-[140px] line-clamp-2">
                     {title}
                   </div>
 
                   {/* Media type and year */}
-                  <div className="text-xs sm:text-sm text-gray-400">
+                  <div className="text-[10px] sm:text-sx text-gray-400">
                     {item.media_type === "movie" ? "Movie" : "TV Show"}
                     {(item.release_date || item.first_air_date) &&
                       ` (${(item.release_date || item.first_air_date).slice(0, 4)})`}

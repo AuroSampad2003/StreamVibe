@@ -440,11 +440,11 @@ function NavigationBar() {
                                 className="w-10 h-14 rounded object-cover flex-shrink-0"
                               />
                               <div className="flex flex-col overflow-hidden">
-                                <span className="font-medium truncate text-white text-sm sm:text-base">
+                                <span className="font-normal truncate text-[#FFFFFF] text-sm sm:text-base">
                                   {item.title || item.name}
                                 </span>
-                                <span className="text-xs sm:text-sm text-gray-400 truncate">
-                                  {item.media_type === "movie" ? "Movie" : "Show"}
+                                <span className="text-xs sm:text-sm text-[#999999] truncate">
+                                  {item.media_type === "movie" ? "Movie" : "TV Show"}
                                   {(item.release_date || item.first_air_date) &&
                                     ` (${(item.release_date || item.first_air_date).slice(0, 4)})`}
                                 </span>
@@ -492,10 +492,10 @@ function NavigationBar() {
                         <img
                           src={notif.image}
                           alt=""
-                          className="w-12 h-16 rounded object-cover flex-shrink-0"
+                          className="w-10 h-14 rounded object-cover flex-shrink-0"
                         />
                         <div className="overflow-hidden">
-                          <p className="font-semibold text-xs sm:text-sm truncate">
+                          <p className="font-normal text-sm sm:text-base truncate">
                             {notif.title}
                           </p>
                           <p className="text-[#BFBFBF] text-xs sm:text-sm line-clamp-2">

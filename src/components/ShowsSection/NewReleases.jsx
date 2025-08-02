@@ -106,7 +106,6 @@ function NewReleases() {
     return renderSkeleton();
   }
 
-
   return (
     <div className="text-white px-20 xl:px-10 md:px-6 sm-max:px-0.5 mt-16 mb-16">
       <div className="flex justify-between items-center mb-6">
@@ -157,7 +156,7 @@ function NewReleases() {
             onClick={() => handleShowClick(item.id)} // Navigate on click
           >
             <img
-              className='w-full aspect-[2/3] rounded-xl object-cover'
+              className='w-full aspect-[3/4] rounded-xl object-cover'
               src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}
               alt="Loading..." />
             <h1 className='text-center text-xs sm:text-sm text-[#999999] bg-[#141414] px-2 py-1 w-full mx-auto mt-3 border border-[#262626] rounded-3xl flex items-center justify-center gap-1'>

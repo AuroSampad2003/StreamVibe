@@ -1,59 +1,109 @@
 import { useEffect, useState } from "react";
-import { FaPlay, FaPlus, FaThumbsUp, FaVolumeHigh, FaVolumeXmark, FaArrowLeft, FaArrowRight } from "react-icons/fa6"; // Font Awesome 6 (Free)
+import {
+  FaPlay,
+  FaPlus,
+  FaThumbsUp,
+  FaVolumeHigh,
+  FaVolumeXmark,
+  FaArrowLeft,
+  FaArrowRight,
+} from "react-icons/fa6";
 import { Dialog } from "@material-tailwind/react";
 
 function HeroBanner() {
-  const [movies, setMovies] = useState([]);
+  const [items, setItems] = useState([]); // Combined movies & tv shows
   const [currentIndex, setCurrentIndex] = useState(0);
   const [open, setOpen] = useState(false); // Dialog state
-  const [trailerKey, setTrailerKey] = useState(null); // To store the trailer key for YouTube
+  const [trailerKey, setTrailerKey] = useState(null); // Youtube trailer key
   const [isAdded, setIsAdded] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
+  const API_KEY =
+    "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3ZWZiZTAyYjM1YTU4ZTc1MmU0YTYyNjJhOWZkMmFkYyIsIm5iZiI6MTc0MDc1MTQ5My4zNTgsInN1YiI6IjY3YzFjMjg1OWFkY2QyNTYyNTM1YzIyZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OvJ5K7QpCiaubjID0pJj146d-S05U_0E6JD0pxV_D_o";
 
+  // Fetch popular movies and tv shows and combine them
   useEffect(() => {
-    fetch("https://api.themoviedb.org/3/movie/popular?language=en-US&page=1", {
+    const options = {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3ZWZiZTAyYjM1YTU4ZTc1MmU0YTYyNjJhOWZkMmFkYyIsIm5iZiI6MTc0MDc1MTQ5My4zNTgsInN1YiI6IjY3YzFjMjg1OWFkY2QyNTYyNTM1YzIyZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OvJ5K7QpCiaubjID0pJj146d-S05U_0E6JD0pxV_D_o"
+        Authorization: `Bearer ${API_KEY}`,
+      },
+    };
+
+    async function fetchData() {
+      try {
+        const [movieRes, tvRes] = await Promise.all([
+          fetch(
+            "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1",
+            options
+          ),
+          fetch(
+            "https://api.themoviedb.org/3/tv/popular?language=en-US&page=1",
+            options
+          ),
+        ]);
+
+        const movieData = await movieRes.json();
+        const tvData = await tvRes.json();
+
+        // Add media_type property to distinguish items
+        const moviesWithType = movieData.results.map((item) => ({
+          ...item,
+          media_type: "movie",
+        }));
+
+        const tvsWithType = tvData.results.map((item) => ({
+          ...item,
+          media_type: "tv",
+        }));
+
+        // Combine and optionally shuffle or sort (here keeping movie first)
+        const combined = [...moviesWithType, ...tvsWithType];
+
+        setItems(combined);
+      } catch (err) {
+        console.error("Failed to fetch movies or tv shows:", err);
       }
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        setMovies(res.results);
-      })
-      .catch((err) => console.error(err));
+    }
+
+    fetchData();
   }, []);
 
+  // Auto-slide every 5 seconds
   useEffect(() => {
+    if (items.length === 0) return;
+
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % movies.length);
-    }, 5000); // Auto-slide every 5 seconds
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
+    }, 5000);
+
     return () => clearInterval(interval);
-  }, [movies]);
+  }, [items]);
 
-  if (movies.length === 0) return null;
+  if (items.length === 0) return null;
 
-  const currentMovie = movies[currentIndex];
+  const currentItem = items[currentIndex];
 
-  // Function to handle Play button click
+  // Handle Play button to dynamically fetch trailer for movie or tv show
   const handlePlayClick = async () => {
     try {
       const res = await fetch(
-        `https://api.themoviedb.org/3/movie/${currentMovie.id}/videos?language=en-US`,
+        `https://api.themoviedb.org/3/${currentItem.media_type}/${currentItem.id}/videos?language=en-US`,
         {
           headers: {
             accept: "application/json",
-            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3ZWZiZTAyYjM1YTU4ZTc1MmU0YTYyNjJhOWZkMmFkYyIsIm5iZiI6MTc0MDc1MTQ5My4zNTgsInN1YiI6IjY3YzFjMjg1OWFkY2QyNTYyNTM1YzIyZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OvJ5K7QpCiaubjID0pJj146d-S05U_0E6JD0pxV_D_o"
-          }
+            Authorization: `Bearer ${API_KEY}`,
+          },
         }
       );
+
       const data = await res.json();
       const trailer = data.results.find(
         (vid) => vid.type === "Trailer" && vid.site === "YouTube"
       );
+
       if (trailer) {
         setTrailerKey(trailer.key);
         setOpen(true);
@@ -65,17 +115,24 @@ function HeroBanner() {
     }
   };
 
+  // Use title or name depending on media type
+  const title = currentItem.title || currentItem.name || "Untitled";
+
   return (
     <div className="relative mb-20 w-full max-w-[1400px] mx-auto text-white overflow-hidden rounded-lg sm:max-w-[90%]">
       <img
         className="w-full h-[600px] object-cover object-top rounded-lg"
-        src={`https://image.tmdb.org/t/p/original/${currentMovie.backdrop_path}`}
-        alt={currentMovie.title}
+        src={`https://image.tmdb.org/t/p/original/${currentItem.backdrop_path || currentItem.poster_path}`}
+        alt={title}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
       <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-center px-6 w-full max-w-3xl">
-        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3">{currentMovie.title}</h1>
-        <p className="text-base xl-max:text-sm md-max:text-xs text-[#999999] max-w-xl mx-auto">{currentMovie.overview.slice(0, 150)}...</p>
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3">{title}</h1>
+        <p className="text-base xl-max:text-sm md-max:text-xs text-[#999999] max-w-xl mx-auto">
+          {currentItem.overview?.slice(0, 150) || "No description available..."}
+          ...
+        </p>
+
         <div className="mt-4 flex justify-center items-center gap-4">
           {/* Play Now Button */}
           <button
@@ -88,8 +145,9 @@ function HeroBanner() {
           {/* Add Button (FaPlus) */}
           <button
             onClick={() => setIsAdded(!isAdded)}
-            className={`bg-[#0F0F0F] p-3 rounded-lg border border-[#262626] ${isAdded ? "text-[#E50000]" : "text-white"
-              }`}
+            className={`bg-[#0F0F0F] p-3 rounded-lg border border-[#262626] ${
+              isAdded ? "text-[#E50000]" : "text-white"
+            }`}
           >
             <FaPlus />
           </button>
@@ -97,8 +155,9 @@ function HeroBanner() {
           {/* Like Button (FaThumbsUp) */}
           <button
             onClick={() => setIsLiked(!isLiked)}
-            className={`bg-[#0F0F0F] p-3 rounded-lg border border-[#262626] ${isLiked ? "text-[#E50000]" : "text-white"
-              }`}
+            className={`bg-[#0F0F0F] p-3 rounded-lg border border-[#262626] ${
+              isLiked ? "text-[#E50000]" : "text-white"
+            }`}
           >
             <FaThumbsUp />
           </button>
@@ -106,8 +165,9 @@ function HeroBanner() {
           {/* Volume Button (Static) */}
           <button
             onClick={() => setIsMuted(!isMuted)}
-            className={`bg-[#0F0F0F] p-3 rounded-lg border border-[#262626] ${isMuted ? "text-[#E50000]" : "text-white"
-              }`}
+            className={`bg-[#0F0F0F] p-3 rounded-lg border border-[#262626] ${
+              isMuted ? "text-[#E50000]" : "text-white"
+            }`}
           >
             {isMuted ? <FaVolumeXmark /> : <FaVolumeHigh />}
           </button>
@@ -116,10 +176,12 @@ function HeroBanner() {
 
       {/* Pagination Indicator */}
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2">
-        {movies.slice(0, 4).map((_, index) => (
+        {items.slice(0, 4).map((_, index) => (
           <div
             key={index}
-            className={`h-1 w-6 rounded-full ${currentIndex % 4 === index ? 'bg-[#E50000]' : 'bg-gray-800'}`}
+            className={`h-1 w-6 rounded-full ${
+              currentIndex % 4 === index ? "bg-[#E50000]" : "bg-gray-800"
+            }`}
           ></div>
         ))}
       </div>
@@ -127,18 +189,20 @@ function HeroBanner() {
       {/* Navigation Buttons */}
       <button
         className="absolute bottom-6 left-10 bg-[#0F0F0F] bg-opacity-50 border border-[#262626] p-3 rounded-full"
-        onClick={() => setCurrentIndex((prevIndex) => (prevIndex === 0 ? movies.length - 1 : prevIndex - 1))}
+        onClick={() =>
+          setCurrentIndex((prevIndex) => (prevIndex === 0 ? items.length - 1 : prevIndex - 1))
+        }
       >
         <FaArrowLeft />
       </button>
       <button
         className="absolute bottom-6 right-10 bg-[#0F0F0F] bg-opacity-50 border border-[#262626] p-3 rounded-full"
-        onClick={() => setCurrentIndex((prevIndex) => (prevIndex + 1) % movies.length)}
+        onClick={() => setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length)}
       >
         <FaArrowRight />
       </button>
 
-      {/* Dialog for Playing Movie */}
+      {/* Dialog for Playing Trailer */}
       <Dialog size="xl" open={open} handler={() => setOpen(false)} className="bg-black">
         {trailerKey ? (
           <iframe

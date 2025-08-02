@@ -189,7 +189,7 @@ function TrendingNow() {
             className='bg-[#1A1A1A] border border-[#262626] rounded-xl p-3 flex-shrink-0 mx-2 cursor-pointer transform hover:translate-y-[-10px] transition-[background,transform] duration-500 ease-in-out'
           >
             <img
-              className='w-full aspect-[2/3] rounded-xl object-cover'
+              className='w-full aspect-[3/4] rounded-xl object-cover'
               src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}
               alt="Loading..." />
 

@@ -127,23 +127,23 @@ function CategoriesList() {
         <h2 className="hidden md:inline font-bold text-xl md:text-lg mb-2 relative bottom-4 left-9 rounded-lg px-3 py-2 bg-[#E50000]">
           {genreName}
         </h2>
-        <div className="grid gap-6 sm:gap-7 m-4 sm:m-6 md:m-10 grid-cols-[repeat(auto-fill,minmax(140px,1fr))]">
+        <div className="grid gap-4 sm:gap-5 md:gap-6 m-2 sm:m-4 md:m-6 lg:m-10 grid-cols-[repeat(auto-fill,minmax(100px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(140px,1fr))]">
           {paginatedItems.map((item) => (
             <Link
               key={item.id}
               to={`/${categoryType}/${item.id}`}
-              className="border border-[#262626] rounded-xl transform hover:translate-y-[-10px] transition-[background,transform] duration-500 ease-in-out"
+              className="flex flex-col items-center"
             >
-              <div>
+              <div className="border border-[#262626] rounded-xl transform hover:translate-y-[-10px] transition-[background,transform] duration-500 ease-in-out overflow-hidden">
                 <img
-                  className="w-full aspect-[2/3] rounded-xl object-cover"
+                  className="w-full aspect-[3/4] rounded-xl object-cover"
                   src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}
                   alt={item.title || item.name || "Poster"}
                 />
-                {/* <div className="text-center mt-2 font-bold">
-                  {item.title || item.name}
-                </div> */}
               </div>
+              <div className="mt-1 text-center font-medium text-xs sm:text-sm text-white max-w-[140px] line-clamp-2">
+                  {item.title || item.name}
+                </div>
             </Link>
           ))}
         </div>
