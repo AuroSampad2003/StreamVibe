@@ -20,7 +20,8 @@ function useDebounce(value, delay) {
   return debounced;
 }
 
-function formatRelativeTime(timestamp) {
+// Utility to format notification timestamp
+function formatNotificationTimestamp(timestamp) {
   const now = new Date();
   const notifDate = new Date(timestamp);
   const diffMs = now - notifDate;
@@ -29,25 +30,36 @@ function formatRelativeTime(timestamp) {
   const diffHour = Math.floor(diffMin / 60);
   const diffDay = Math.floor(diffHour / 24);
 
-  // "x min ago"
-  if (diffMin < 1) return `${diffSec}s ago`;
-  if (diffHour < 1) return `${diffMin}min ago`;
-  // "x h ago"
-  if (diffDay < 1 && now.getDate() === notifDate.getDate()) return `${diffHour}h ago`;
-  // "yesterday"
-  const yesterday = new Date(now);
-  yesterday.setDate(now.getDate() - 1);
-  if (
-    notifDate.getFullYear() === yesterday.getFullYear() &&
-    notifDate.getMonth() === yesterday.getMonth() &&
-    notifDate.getDate() === yesterday.getDate()
-  ) {
-    return "yesterday";
+  // Past/future guard
+  if (diffDay < 0 || diffSec < 0) {
+    // Future date: show full timestamp
+    return notifDate.toLocaleDateString("en-GB") + " " +
+      notifDate.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
   }
-  // Default: show date
-  return notifDate.toLocaleDateString();
-}
 
+  // Over 7 days: show DD/MM/YYYY HH:MM AM/PM
+  if (diffDay > 7) {
+    return (
+      notifDate.toLocaleDateString("en-GB") +
+      " " +
+      notifDate.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true })
+    );
+  }
+
+  // Date label
+  let dateStr;
+  if (diffDay === 0) dateStr = "Today";
+  else if (diffDay === 1) dateStr = "Yesterday";
+  else dateStr = `${diffDay}d ago`;
+
+  // Time label (up to 1 day, then hours)
+  let timeStr;
+  if (diffSec < 60) timeStr = `${diffSec}s ago`;
+  else if (diffMin < 60) timeStr = `${diffMin}min ago`;
+  else timeStr = `${diffHour}h ago`;
+
+  return `${dateStr} ${timeStr}`;
+}
 
 function NavigationBar() {
   const navigate = useNavigate();
@@ -212,10 +224,12 @@ function NavigationBar() {
           newNotifs.push({
             id: `upcoming_${movie.id}`,
             title: "Releasing Soon!",
-            message: `'${movie.title}' releases on ${movie.release_date}`,
+            message: `'${movie.title}' releases on ${new Date(movie.release_date).toLocaleDateString("en-GB", {
+              day: "numeric", month: "long", year: "numeric"
+            })}`,
             image: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
             link: `/movie/${movie.id}`,
-            timestamp: movie.release_date,
+            timestamp: new Date().toISOString(), // Or: Date.now(), or any current time value
             read: false,
           });
         }
@@ -502,7 +516,7 @@ function NavigationBar() {
                             {notif.message}
                           </p>
                           <p className="text-[#999999] text-[10px] sm:text-xs mt-1">
-                            {formatRelativeTime(notif.timestamp)}
+                            {formatNotificationTimestamp(notif.timestamp)}
                           </p>
 
                         </div>
