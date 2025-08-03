@@ -2,7 +2,7 @@
 
 **StreamVibe** is a modern movie and TV show streaming platform built with React and Tailwind CSS, powered by TMDb API. It features genre based browsing, trending titles, detailed cast and crew info, trailers, reviews, and a fully responsive design. Think of it like your custom-built Netflix clone — but cooler and developer-owned.
 
-👉 **Live Site:** [streamvibe-auro.vercel.app](https://streamvibe-auro.vercel.app/)
+👉 **Live Demo:** [streamvibe-auro.vercel.app](https://streamvibe-auro.vercel.app/)
 
 ---
 
