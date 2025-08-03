@@ -10,6 +10,9 @@ import { Dialog } from "@material-tailwind/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { assets } from "../assets/assets";
 
+const TMDB_BEARER = import.meta.env.VITE_TMDB_BEARER;
+const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+
 // Helper to get 5-star icons with full/half/empty based on rating (0-5)
 function getStarIcons(rating) {
   const stars = [];
@@ -27,11 +30,9 @@ function getStarIcons(rating) {
 
 function formatRelativeDate(dateString) {
   if (!dateString) return 'Unknown';
-
   const now = new Date();
   const date = new Date(dateString);
   const diffMs = now - date;
-
   const diffMinutes = Math.floor(diffMs / (1000 * 60));
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -40,7 +41,6 @@ function formatRelativeDate(dateString) {
     // Future date? Show absolute fallback
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   }
-
   if (diffDays === 0) {
     if (diffHours === 0) {
       if (diffMinutes < 5) {
@@ -50,15 +50,12 @@ function formatRelativeDate(dateString) {
     }
     return `${diffHours}h ago`; // hours ago
   }
-
   if (diffDays === 1) {
     return 'Yesterday';
   }
-
   if (diffDays < 7) {
     return `${diffDays}d ago`;
   }
-
   // Fallback to absolute date, formatted "Month day, year"
   return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
@@ -68,7 +65,6 @@ function getTrimmedText(text, maxLen = 250) {
   if (text.length <= maxLen) return text;
   return text.slice(0, maxLen).trim() + "...";
 }
-
 
 function MovieDetails() {
   const { categoryType, id } = useParams();
@@ -91,8 +87,6 @@ function MovieDetails() {
   const [tmdbReviews, setTmdbReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
 
-  const apikey = "7efbe02b35a58e752e4a6262a9fd2adc";
-
   const handleOpen = () => setOpen(!open);
 
   const responsive = {
@@ -106,8 +100,7 @@ function MovieDetails() {
     method: "GET",
     headers: {
       accept: "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3ZWZiZTAyYjM1YTU4ZTc1MmU0YTYyNjJhOWZkMmFkYyIsIm5iZiI6MTc0MDc1MTQ5My4zNTgsInN1YiI6IjY3YzFjMjg1OWFkY2QyNTYyNTM1YzIyZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OvJ5K7QpCiaubjID0pJj146d-S05U_0E6JD0pxV_D_o",
+      Authorization: TMDB_BEARER,
     },
   };
   const carouselRef = useRef();
@@ -128,7 +121,7 @@ function MovieDetails() {
       })
       .catch(console.error);
 
-    fetch(`https://api.themoviedb.org/3/${category}/${id}/videos?api_key=${apikey}`)
+    fetch(`https://api.themoviedb.org/3/${category}/${id}/videos?api_key=${TMDB_API_KEY}`)
       .then((res) => res.json())
       .then((data) => setVideoData(data.results[0]?.key || ""))
       .catch(console.error);
@@ -307,7 +300,7 @@ function MovieDetails() {
 
       {/* Info Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start mt-10">
-        
+
         {/* Left Section */}
         <div className="space-y-8 order-2 lg:order-1 lg:col-span-2">
           {/* Seasons and Episodes */}
@@ -340,10 +333,10 @@ function MovieDetails() {
                       )}
                     </span>
                   </button>
-                      
+
                   {expandedSeason === season.season_number && episodesMap[season.season_number] && (
                     <>
-                    {/* For small screen */}
+                      {/* For small screen */}
                       <div className="sm:hidden space-y-4 p-4">
                         {episodesMap[season.season_number].map((episode, i) => (
                           <div key={episode.id} className="bg-[#141414] p-4 rounded-lg space-y-4">
@@ -382,7 +375,7 @@ function MovieDetails() {
                         ))}
                       </div>
 
-                        {/* For large screen */}
+                      {/* For large screen */}
                       <div className="hidden sm:block">
                         {episodesMap[season.season_number].map((episode, i) => (
                           <React.Fragment key={episode.id}>

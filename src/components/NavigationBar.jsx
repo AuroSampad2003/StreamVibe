@@ -90,9 +90,9 @@ function NavigationBar() {
 
     async function fetchSuggestions() {
       try {
-        const apiKey = "7efbe02b35a58e752e4a6262a9fd2adc"; // <-- INSERT YOUR TMDb API KEY
+        const TMDB_API_KEY  = import.meta.env.VITE_TMDB_API_KEY; // <-- INSERT YOUR TMDb API KEY
         const res = await fetch(
-          `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${encodeURIComponent(
+          `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY }&query=${encodeURIComponent(
             debouncedSearch
           )}`,
           { signal: controller.signal }
@@ -183,8 +183,7 @@ function NavigationBar() {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3ZWZiZTAyYjM1YTU4ZTc1MmU0YTYyNjJhOWZkMmFkYyIsIm5iZiI6MTc0MDc1MTQ5My4zNTgsInN1YiI6IjY3YzFjMjg1OWFkY2QyNTYyNTM1YzIyZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.OvJ5K7QpCiaubjID0pJj146d-S05U_0E6JD0pxV_D_o"
+        Authorization: import.meta.env.VITE_TMDB_BEARER
       },
     };
 

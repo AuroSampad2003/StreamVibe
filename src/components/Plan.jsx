@@ -28,7 +28,6 @@ function Plan() {
         },
     ];
 
-
     return (
         <div className="text-white px-20 xl-max:px-10 sm-max:px-3 mt-2 mb-2 sm:mt-10 sm:mb-32">
 
