@@ -52,7 +52,7 @@ npm install
 Create a `.env` file in the root directory and add TMDb API key:
 
 ```env
-VITE_TMDB_API_KEY=7efbe02b35a58e752e4a6262a9fd2adc
+VITE_TMDB_API_KEY=your_tmdb_api_key_here
 
 ```
 [Get your TMDb API key here](https://www.themoviedb.org/settings/api)
