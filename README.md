@@ -66,6 +66,8 @@ npm run dev
 
 ```
 
+---
+
 ## 📦 Build for Production
 
 ```bash
