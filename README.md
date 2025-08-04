@@ -66,14 +66,14 @@ npm run dev
 
 ```
 
-### 📦 Build for Production
+## 📦 Build for Production
 
 ```bash
 npm run build
 
 ```
 
-### 🔄 Preview Production Build
+## 🔄 Preview Production Build
 
 ```bash
 npm run preview
