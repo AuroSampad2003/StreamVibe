@@ -90,9 +90,9 @@ function NavigationBar() {
 
     async function fetchSuggestions() {
       try {
-        const TMDB_API_KEY  = import.meta.env.VITE_TMDB_API_KEY; // <-- INSERT YOUR TMDb API KEY
+        const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY; // <-- INSERT YOUR TMDb API KEY
         const res = await fetch(
-          `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY }&query=${encodeURIComponent(
+          `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(
             debouncedSearch
           )}`,
           { signal: controller.signal }
@@ -355,7 +355,18 @@ function NavigationBar() {
             }`}
         >
           {/* Logo */}
-          <div className="flex flex-row items-center">
+          <div
+            className="flex flex-row items-center cursor-pointer"
+            onClick={() => navigate("/")}
+            title="Go to Home"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                navigate("/");
+              }
+            }}
+            role="button"
+          >
             <div className="relative w-7 h-7 sm:w-10 sm:h-10 md:w-10 md:h-10 flex items-center justify-center">
               <svg
                 className="absolute top-0 left-0 w-full h-full rotate-[325deg]"
