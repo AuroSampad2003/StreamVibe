@@ -53,7 +53,7 @@ function HeroSection() {
                 src={
                   data.backdrop_path
                     ? `https://image.tmdb.org/t/p/w500/${data.backdrop_path}`
-                    : assets.defaultImage
+                    : " "
                 }
                 alt={assets.defaultImage}
               />
